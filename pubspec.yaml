@@ -1,0 +1,66 @@
+name: freedom_chat_app
+description: "A new Flutter project."
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.6
+  firebase_core: ^2.15.1
+  firebase_auth: ^4.9.0
+  intl: ^0.17.0
+  flutter_bloc: ^8.1.3
+  shared_preferences: ^2.2.1
+  meta: ^1.9.1
+  twitter_login: ^4.0.1
+  timeago: ^3.0.2
+  cloud_firestore: ^4.9.1
+  image_picker: ^1.0.5
+  google_sign_in: ^5.2.1
+  flutter_screenutil: ^5.9.0
+  firebase_storage: any
+  cached_network_image: any
+  get_it: ^7.6.4
+  flutter_local_notifications: ^15.1.1
+  firebase_messaging: ^14.1.4
+  equatable: ^2.0.3
+  http: ^0.13.4
+  oauth1: ^2.0.0
+  fluttertoast: ^8.0.8
+  flutter_svg: ^2.0.9
+  font_awesome_flutter: ^9.1.0
+  freezed: ^2.4.6
+  freezed_annotation: ^2.4.1
+  json_serializable: ^6.7.1
+  json_annotation: ^4.8.1
+  github_sign_in: ^0.0.5-dev.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.13.1
+  build_runner: ^2.4.7
+  flutter_lints: ^3.0.0
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/Logo_dark_freedom.png"
+
+flutter:
+
+
+  uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/icons/
+    - assets/images/
+
