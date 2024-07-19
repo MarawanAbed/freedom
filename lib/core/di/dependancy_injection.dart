@@ -6,6 +6,30 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freedom_chat_app/core/helpers/cache.dart';
 import 'package:freedom_chat_app/core/services/firebase_services.dart';
 import 'package:freedom_chat_app/core/services/notification_services.dart';
+import 'package:freedom_chat_app/core/utils/app_secured.dart';
+import 'package:freedom_chat_app/freedom/chat/domain/use_cases/send_message.dart';
+import 'package:freedom_chat_app/freedom/chat/presentation/bloc/get_all_messages_cubit.dart';
+import 'package:freedom_chat_app/freedom/chat/presentation/bloc/send_messages_cubit.dart';
+import 'package:freedom_chat_app/freedom/edit_profile/domain/use_cases/update_profile.dart';
+import 'package:freedom_chat_app/freedom/profile/presentation/bloc/get_user_cubit.dart';
+import 'package:freedom_chat_app/freedom/search/domain/use_cases/search_users.dart';
+import 'package:freedom_chat_app/freedom/sign_in/data/data_sources/remote_data_source.dart';
+import 'package:freedom_chat_app/freedom/sign_in/data/repositories/repo_impl.dart';
+import 'package:freedom_chat_app/freedom/sign_in/domain/repositories/repo.dart';
+import 'package:freedom_chat_app/freedom/sign_in/domain/use_cases/sign_in_with_email_and_password.dart';
+import 'package:freedom_chat_app/freedom/sign_in/domain/use_cases/sign_in_with_github.dart';
+import 'package:freedom_chat_app/freedom/sign_in/domain/use_cases/sign_in_with_google.dart';
+import 'package:freedom_chat_app/freedom/sign_in/domain/use_cases/sign_in_with_twitter.dart';
+import 'package:freedom_chat_app/freedom/sign_in/presentation/bloc/sign_in_cubit.dart';
+import 'package:freedom_chat_app/freedom/sign_up/data/data_sources/remote_data_source.dart';
+import 'package:freedom_chat_app/freedom/sign_up/data/repositories/repo_impl.dart';
+import 'package:freedom_chat_app/freedom/sign_up/domain/repositories/repo.dart';
+import 'package:freedom_chat_app/freedom/sign_up/domain/use_cases/sign_up.dart';
+import 'package:freedom_chat_app/freedom/sign_up/presentation/bloc/sign_up_cubit.dart';
+import 'package:freedom_chat_app/freedom/verify_email/data/data_sources/remote_data_source.dart';
+import 'package:freedom_chat_app/freedom/verify_email/data/repositories/repo_impl.dart';
+import 'package:freedom_chat_app/freedom/verify_email/domain/repositories/repo.dart';
+import 'package:freedom_chat_app/freedom/verify_email/domain/use_cases/send_email_verification.dart';
 import 'package:get_it/get_it.dart';
 import 'package:github_sign_in/github_sign_in.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -15,227 +39,177 @@ import 'package:twitter_login/twitter_login.dart';
 final getIt = GetIt.instance;
 
 Future<void> setupGetIt() async {
-  try
-  {
+  try {
     getIt.registerLazySingleton<SharedPreCacheHelper>(
-            () => SharedPreCacheHelper(getIt<SharedPreferences>()));
+        () => SharedPreCacheHelper(getIt<SharedPreferences>()));
     final sharedPreferences = await SharedPreferences.getInstance();
     getIt.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
-    // _setupDataSources();
-    // _setupRepositories();
-    // _setupUseCases();
-    // _setupCubits();
+    _setupDataSources();
+    _setupRepositories();
+    _setupUseCases();
+    _setupCubits();
     _setupServices();
     _setupExternal();
-  }catch(e)
-  {
+  } catch (e) {
     print('Failed to initialize dependencies: $e');
   }
 }
 
-// void _setupDataSources() {
-//   //data sources
-//   getIt.registerLazySingleton<HomeRemoteDataSource>(
-//           () => HomeRemoteDataSourceImpl(
-//         databaseService: getIt(),
-//         storeService: getIt(),
-//         authService: getIt(),
-//       ));
-//   getIt.registerLazySingleton<LoginRemoteDataSource>(
-//           () => LoginRemoteDataSourceImpl(getIt()));
-//   getIt.registerLazySingleton<VerifyEmailRemoteDataSource>(
-//           () => VerifyEmailRemoteDataSourceImpl(getIt()));
-//   getIt.registerLazySingleton<RegisterRemoteDataSource>(
-//           () => RegisterRemoteDataSourceImpl(
-//         auth: getIt(),
-//         storage: getIt(),
-//         databaseService: getIt(),
-//       ));
-//   getIt.registerLazySingleton<ForgetRemoteDataSource>(
-//           () => ForgetRemoteDataSourceImpl(auth: getIt()));
-//   getIt.registerLazySingleton<ChatRemoteDataSource>(
-//         () => ChatRemoteDataSourceImpl(getIt(), getIt(), getIt()),
-//   );
-// }
-//
-// void _setupRepositories()
-// {
-//   getIt.registerLazySingleton<ChatRepo>(() => ChatRepoImpl((getIt())));
-//   getIt.registerLazySingleton<HomeRepo>(() => HomeRepoImpl((getIt())));
-//   getIt.registerLazySingleton<LoginInRepo>(() => LoginRepoImpl(getIt()));
-//   getIt.registerLazySingleton<RegisterRepo>(() => RegisterRepoImpl(getIt()));
-//   getIt.registerLazySingleton<ForgetRepo>(() => ForgetRepoImpl(getIt()));
-//   getIt.registerLazySingleton<VerifyEmailRepo>(
-//           () => VerifyEmailRepoImpl(getIt()));
-// }
-//
-// void _setupUseCases()
-// {
-//   getIt.registerLazySingleton<GetAllUsersUseCase>(
-//           () => GetAllUsersUseCase(getIt()));
-//   getIt.registerLazySingleton<GetUserUseCase>(() => GetUserUseCase(getIt()));
-//   getIt.registerLazySingleton<UpdateUserUseCase>(
-//           () => UpdateUserUseCase(getIt()));
-//   getIt.registerLazySingleton<UpdateEmailAndPasswordUseCase>(
-//           () => UpdateEmailAndPasswordUseCase(getIt()));
-//
-//   getIt.registerLazySingleton<CheckVerifyEmailUseCase>(
-//           () => CheckVerifyEmailUseCase(getIt()));
-//   getIt.registerLazySingleton<SignInUseCase>(() => SignInUseCase(getIt()));
-//   getIt.registerLazySingleton<UserUidUseCase>(() => UserUidUseCase(getIt()));
-//   getIt.registerLazySingleton<ForgetPasswordUseCase>(
-//           () => ForgetPasswordUseCase(getIt()));
-//   getIt.registerLazySingleton<HomeLogOutUseCase>(
-//           () => HomeLogOutUseCase(getIt()));
-//   getIt.registerLazySingleton<RegisterUseCase>(() => RegisterUseCase(getIt()));
-//   getIt.registerLazySingleton<RegisterUploadImageUseCase>(
-//           () => RegisterUploadImageUseCase(getIt()));
-//   getIt.registerLazySingleton<UploadImageUseCase>(
-//           () => UploadImageUseCase(getIt()));
-//   getIt.registerLazySingleton<GoogleSignInUseCase>(
-//           () => GoogleSignInUseCase(getIt()));
-//   getIt.registerLazySingleton<GitHubSignInUseCase>(
-//           () => GitHubSignInUseCase(getIt()));
-//   getIt.registerLazySingleton<TwitterSignInUseCase>(
-//           () => TwitterSignInUseCase(getIt()));
-//   getIt.registerLazySingleton<CreateUserUseCase>(
-//           () => CreateUserUseCase(getIt()));
-//   getIt.registerLazySingleton<VerifyEmailUseCase>(
-//           () => VerifyEmailUseCase(getIt()));
-//   getIt.registerLazySingleton<LogOutUseCase>(() => LogOutUseCase(getIt()));
-//   getIt.registerLazySingleton<ResendVerifyEmailUseCase>(
-//           () => ResendVerifyEmailUseCase(getIt()));
-//   getIt.registerLazySingleton<SearchUsersUseCase>(
-//           () => SearchUsersUseCase(getIt()));
-//   getIt.registerLazySingleton<ChatsUploadImageUseCase>(
-//           () => ChatsUploadImageUseCase(getIt()));
-//   getIt.registerLazySingleton<AddImageMessageUseCase>(
-//           () => AddImageMessageUseCase(getIt()));
-//   getIt.registerLazySingleton<AddTextMessageUseCase>(
-//           () => AddTextMessageUseCase(getIt()));
-//   getIt.registerLazySingleton<GetAllMessagesUseCase>(
-//           () => GetAllMessagesUseCase(getIt()));
-//   getIt
-//       .registerLazySingleton<GetUserIdUseCase>(() => GetUserIdUseCase(getIt()));
-//
-// }
-//
-// void _setupCubits()
-// {
-//   getIt.registerFactory<LoginCubit>(
-//         () => LoginCubit(
-//       twitterSignInUseCase: getIt(),
-//       googleSignInUseCase: getIt(),
-//       signInUseCase: getIt(),
-//       gitHubSignInUseCase: getIt(),
-//     ),
-//   );
-//
-//   getIt.registerFactory<SendMessagesCubit>(
-//         () => SendMessagesCubit(
-//       getIt(),
-//       getIt(),
-//       getIt(),
-//       getIt(),
-//     ),
-//   );
-//   getIt.registerFactory<GetAllMessagesCubit>(
-//         () => GetAllMessagesCubit(
-//       getIt(),
-//     ),
-//   );
-//   getIt.registerFactory<UpdateUserCubit>(
-//         () => UpdateUserCubit(
-//       getIt(),
-//       getIt(),
-//       getIt(),
-//       getIt(),
-//     ),
-//   );
-//   getIt.registerFactory<GetAllUserCubit>(
-//         () => GetAllUserCubit(
-//       getIt(),
-//       getIt(),
-//     ),
-//   );
-//   getIt.registerFactory<GetUserCubit>(
-//         () => GetUserCubit(
-//       getIt(),
-//       getIt(),
-//     ),
-//   );
-//   getIt.registerFactory<RegisterCubit>(() => RegisterCubit(
-//     registerUseCase: getIt(),
-//     uploadImageUseCase: getIt(),
-//     createUserUseCase: getIt(),
-//   ));
-//   getIt.registerFactory<ForgetPasswordCubit>(
-//         () => ForgetPasswordCubit(
-//       getIt(),
-//     ),
-//   );
-//
-//   getIt.registerFactory<VerifyEmailCubit>(
-//         () => VerifyEmailCubit(
-//       checkVerifyEmail: getIt(),
-//       verifyEmail: getIt(),
-//       resendVerifyEmail: getIt(),
-//       logOut: getIt(),
-//     ),
-//   );
-//
-//   getIt.registerFactory<SearchUsersCubit>(
-//         () => SearchUsersCubit(
-//       getIt(),
-//     ),
-//   );
-//
-// }
-
-void _setupServices()
-{
-  getIt.registerLazySingleton<AuthService>(() => AuthService(
-    googleSignIn: getIt(),
-    auth: getIt(),
-    gitHubSignIn: getIt(),
-    twitterLogin: getIt(),
-  ));
-  getIt.registerLazySingleton<StorageService>(() => StorageService(
-    getIt(),
-  ));
-  getIt.registerLazySingleton<DatabaseService>(() => DatabaseService(
-    getIt(),
-  ));
-  getIt.registerLazySingleton<RemoteNotificationService>(
-          () => RemoteNotificationService(
-        getIt(),
-        getIt(),
-        getIt(),
-        getIt(),
-      ));
-  getIt.registerLazySingleton<LocalNotificationsServices>(
-          () => LocalNotificationsServices(
-        notificationsPlugin:  getIt(),
-      ));
+void _setupDataSources() {
+  // //data sources
+  // getIt.registerLazySingleton<ChatRemoteDataSource>(
+  //         () => ChatRemoteDataSourceImpl(
+  //       databaseService: getIt(),
+  //       storeService: getIt(),
+  //       authService: getIt(),
+  //     ));
+  getIt.registerLazySingleton<SignInRemoteDataSource>(
+      () => SignInRemoteDataSourceImpl(authService: getIt()));
+  getIt.registerLazySingleton<VerifyRemoteDataSource>(
+      () => VerifyRemoteDataSourceImpl(authService: getIt()));
+  getIt.registerLazySingleton<SignUpRemoteDataSource>(
+      () => SignUpRemoteDataSourceImpl(
+            authService: getIt(),
+            storageService: getIt(),
+            databaseService: getIt(),
+          ));
+  // getIt.registerLazySingleton<ForgetRemoteDataSource>(
+  //         () => ForgetRemoteDataSourceImpl(auth: getIt()));
+  // getIt.registerLazySingleton<ChatRemoteDataSource>(
+  //       () => ChatRemoteDataSourceImpl(getIt(), getIt(), getIt()),
+  // );
 }
 
-void _setupExternal()
-{
+void _setupRepositories() {
+  getIt.registerLazySingleton<SignInRepo>(
+      () => SignInRepoImpl(signInRemoteDataSource: getIt()));
+  // getIt.registerLazySingleton<HomeRepo>(() => HomeRepoImpl((getIt())));
+  // getIt.registerLazySingleton<LoginInRepo>(() => LoginRepoImpl(getIt()));
+  getIt.registerLazySingleton<SignUpRepository>(
+      () => SignUpRepositoryImpl(repo: getIt()));
+  // getIt.registerLazySingleton<ForgetRepo>(() => ForgetRepoImpl(getIt()));
+  getIt.registerLazySingleton<VerifyRepository>(
+      () => VerifyRepoImpl(verifyDataSource: getIt()));
+}
+
+void _setupUseCases() {
+  getIt.registerLazySingleton<SendEmailVerificationUseCase>(
+      () => SendEmailVerificationUseCase(repo: getIt()));
+  getIt
+      .registerLazySingleton<SignUpUseCase>(() => SignUpUseCase(repo: getIt()));
+  getIt.registerLazySingleton<SignInWithEmailAndPasswordUseCase>(
+      () => SignInWithEmailAndPasswordUseCase(repo: getIt()));
+  getIt.registerLazySingleton<SignInWithTwitterUseCase>(
+      () => SignInWithTwitterUseCase(repo: getIt()));
+  getIt.registerLazySingleton<SignInWithGoogleUseCase>(
+      () => SignInWithGoogleUseCase(repo: getIt()));
+  getIt.registerLazySingleton<SignInWithGithubUseCase>(
+      () => SignInWithGithubUseCase(repo: getIt()));
+  getIt.registerLazySingleton<SearchUsersUseCase>(
+      () => SearchUsersUseCase(repo: getIt()));
+  getIt.registerLazySingleton<UpdateProfileUseCase>(
+      () => UpdateProfileUseCase(repo: getIt()));
+  getIt.registerLazySingleton<SendMessageUseCase>(() => SendMessageUseCase());
+}
+
+void _setupCubits() {
+  getIt.registerFactory<SignInCubit>(
+    () => SignInCubit(
+      getIt(),
+      getIt(),
+      getIt(),
+      getIt(),
+    ),
+  );
+
+  getIt.registerFactory<SendMessagesCubit>(
+    () => SendMessagesCubit(),
+  );
+  getIt.registerFactory<GetAllMessagesCubit>(
+    () => GetAllMessagesCubit(),
+  );
+  // getIt.registerFactory<UpdateUserCubit>(
+  //   () => UpdateUserCubit(
+  //     getIt(),
+  //     getIt(),
+  //     getIt(),
+  //     getIt(),
+  //   ),
+  // );
+  // getIt.registerFactory<GetAllUserCubit>(
+  //   () => GetAllUserCubit(
+  //     getIt(),
+  //     getIt(),
+  //   ),
+  // );
+  getIt.registerFactory<GetUserCubit>(
+    () => GetUserCubit(),
+  );
+  getIt.registerFactory<SignUpCubit>(() => SignUpCubit());
+  // getIt.registerFactory<ForgetPasswordCubit>(
+  //   () => ForgetPasswordCubit(
+  //     getIt(),
+  //   ),
+  // );
+  //
+  // getIt.registerFactory<VerifyEmailCubit>(
+  //   () => VerifyEmailCubit(
+  //     checkVerifyEmail: getIt(),
+  //     verifyEmail: getIt(),
+  //     resendVerifyEmail: getIt(),
+  //     logOut: getIt(),
+  //   ),
+  // );
+  //
+  // getIt.registerFactory<SearchUsersCubit>(
+  //   () => SearchUsersCubit(
+  //     getIt(),
+  //   ),
+  // );
+}
+
+void _setupServices() {
+  getIt.registerLazySingleton<AuthService>(() => AuthService(
+        googleSignIn: getIt(),
+        auth: getIt(),
+        gitHubSignIn: getIt(),
+        twitterLogin: getIt(),
+      ));
+  getIt.registerLazySingleton<StorageService>(() => StorageService(
+        getIt(),
+      ));
+  getIt.registerLazySingleton<DatabaseService>(() => DatabaseService(
+        getIt(),
+      ));
+  getIt.registerLazySingleton<RemoteNotificationService>(
+      () => RemoteNotificationService(
+            getIt(),
+            getIt(),
+            getIt(),
+            getIt(),
+          ));
+  getIt.registerLazySingleton<LocalNotificationsServices>(
+      () => LocalNotificationsServices(
+            notificationsPlugin: getIt(),
+          ));
+}
+
+void _setupExternal() {
   final auth = FirebaseAuth.instance;
   final googleSignIn = GoogleSignIn();
   final GitHubSignIn gitHubSignIn = GitHubSignIn(
-    clientId: '',
-    clientSecret:'',
-    redirectUrl: '',
+    clientId: AppSecured.gitHubClientId,
+    clientSecret: AppSecured.gitHubClientSecret,
+    redirectUrl: 'https://notes-firebase-f2d88.firebaseapp.com/__/auth/handler',
   );
   final twitterLogin = TwitterLogin(
-      apiKey: 'AppSecured.twitterApiKey',
-      apiSecretKey: 'AppSecured.twitterApiSecretKey',
+      apiKey: AppSecured.twitterApiKey,
+      apiSecretKey: AppSecured.twitterApiSecret,
       redirectURI: 'flutter-twitter-practice://');
   final storage = FirebaseStorage.instance;
   final fireStore = FirebaseFirestore.instance;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
   final messaging = FirebaseMessaging.instance;
   getIt.registerLazySingleton(() => auth);
   getIt.registerLazySingleton(() => messaging);

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:freedom_chat_app/core/themes/styles.dart';
 import 'package:freedom_chat_app/core/utils/sizes.dart';
 import 'package:freedom_chat_app/core/utils/strings.dart';
+import 'package:freedom_chat_app/freedom/profile/presentation/widgets/profile_header.dart';
 
 import '../../../../core/helpers/helper_methods.dart';
 import '../../../../core/widgets/elevated_button.dart';
-import '../../../../core/widgets/profile_image.dart';
 import 'build_row_info.dart';
 
 class ProfileBody extends StatelessWidget {
@@ -22,7 +21,7 @@ class ProfileBody extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Header(),
+            const ProfileHeader(),
             HelperMethod.verticalSpace(AppSizes.verticalSpacingS30),
             const BuildRowInfo(),
             HelperMethod.verticalSpace(AppSizes.verticalSpacingS30),
@@ -35,29 +34,6 @@ class ProfileBody extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class Header extends StatelessWidget {
-  const Header({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ProfileImage(
-          image: const NetworkImage('https://picsum.photos/200'),
-          radius: AppSizes.profileRadius,
-        ),
-        HelperMethod.verticalSpace(AppSizes.verticalSpacingS30),
-        Text(
-          'marwan',
-          style: TextStyles.font22Bold,
-        ),
-      ],
     );
   }
 }

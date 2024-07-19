@@ -2,12 +2,10 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:freedom_chat_app/core/helpers/helper_methods.dart';
+import 'package:freedom_chat_app/freedom/sign_up/data/models/user_model.dart';
 import 'package:github_sign_in/github_sign_in.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:twitter_login/twitter_login.dart';
@@ -106,7 +104,7 @@ class AuthService {
     return auth.currentUser?.uid;
   }
 
-  Future<void> handleGoogleSignIn() async {
+  Future<void> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
@@ -116,14 +114,14 @@ class AuthService {
       // Force account selection
       await googleSignIn.signOut(); // Sign out to force account selection
       final GoogleSignInAccount? selectedGoogleUser =
-      await googleSignIn.signIn();
+          await googleSignIn.signIn();
 
       if (selectedGoogleUser == null) {
         throw Exception('Google sign in aborted by user');
       }
 
       final GoogleSignInAuthentication googleAuth =
-      await selectedGoogleUser.authentication;
+          await selectedGoogleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -218,7 +216,6 @@ class AuthService {
       // });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'account-exists-with-different-credential') {
-        // Handle the case where the email already exists
         throw Exception(
             'An account already exists with the same email address. Please try another one.');
       } else {
@@ -230,9 +227,10 @@ class AuthService {
     }
   }
 
-  Future<void> handleGitHubSignIn(context) async {
+  Future<void> signInWithGithub(context) async {
     try {
       final result = await gitHubSignIn.signIn(context);
+
       final githubAuthCredential = GithubAuthProvider.credential(result.token!);
 
       // Sign in with the GitHub credential
@@ -297,6 +295,10 @@ class AuthService {
     }
   }
 
+  bool userVerified() {
+    return auth.currentUser!.emailVerified;
+  }
+
   Future<void> resendEmailVerification() async {
     try {
       final user = auth.currentUser;
@@ -358,14 +360,14 @@ class DatabaseService {
   DatabaseService(this.fireStore);
 
   //
-  Future<void> createUser() async {
+  Future<void> createUser(UserModel users) async {
     final userCollection = fireStore.collection('users');
     final uid = getIt<AuthService>().getCurrentUserId();
     if (uid != null) {
       final userData = await userCollection.doc(uid).get();
       if (!userData.exists) {
-        // final user = userModel.toJson();
-        // await userCollection.doc(uid).set(user);
+        final user = users.toJson();
+        await userCollection.doc(uid).set(user);
       }
     } else {
       throw Exception('Failed to create user');
@@ -402,19 +404,31 @@ class DatabaseService {
     }
   }
 
-//
-//   Stream<MyAccountModel> getSingleUser() {
-//     var uId = getIt<AuthService>().getCurrentUserId();
-//     final userDoc = fireStore.collection('users').doc(uId);
-//
-//     return userDoc.snapshots(includeMetadataChanges: true).map((userSnapshot) {
-//       if (userSnapshot.exists) {
-//         final userData = userSnapshot.data() as Map<String, dynamic>;
-//         return MyAccountModel.fromJson(userData);
-//       }
-//       throw Exception('User does not exist');
-//     });
-//   }
+  Stream<UserModel> getSingleUser() {
+    var uId = getIt<AuthService>().getCurrentUserId();
+    final userDoc = fireStore.collection('users').doc(uId);
+
+    return userDoc.snapshots(includeMetadataChanges: true).map((userSnapshot) {
+      if (userSnapshot.exists) {
+        final userData = userSnapshot.data() as Map<String, dynamic>;
+        return UserModel.fromJson(userData);
+      }
+      throw Exception('User does not exist');
+    });
+  }
+
+  Stream<List<UserModel>> searchUsers({required String name}) {
+    final userCollection = fireStore
+        .collection('users')
+        .where('name', isGreaterThanOrEqualTo: name)
+        .where('name', isLessThanOrEqualTo: '$name\uf8ff')
+        .snapshots(includeMetadataChanges: true);
+    return userCollection.map((querySnapshot) {
+      return querySnapshot.docs
+          .map((e) => UserModel.fromJson(e.data()))
+          .toList();
+    });
+  }
 }
 
 class StorageService {

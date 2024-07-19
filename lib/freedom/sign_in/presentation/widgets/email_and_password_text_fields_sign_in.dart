@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freedom_chat_app/core/helpers/helper_methods.dart';
 import 'package:freedom_chat_app/core/helpers/validation.dart';
 import 'package:freedom_chat_app/core/themes/app_colors.dart';
@@ -6,6 +7,7 @@ import 'package:freedom_chat_app/core/themes/styles.dart';
 import 'package:freedom_chat_app/core/utils/sizes.dart';
 import 'package:freedom_chat_app/core/utils/strings.dart';
 import 'package:freedom_chat_app/core/widgets/app_text_form.dart';
+import 'package:freedom_chat_app/freedom/sign_in/presentation/bloc/sign_in_cubit.dart';
 
 class EmailAndPasswordTextFieldsSignIn extends StatefulWidget {
   const EmailAndPasswordTextFieldsSignIn({super.key});
@@ -16,33 +18,24 @@ class EmailAndPasswordTextFieldsSignIn extends StatefulWidget {
 
 class _EmailAndPasswordTextFieldsSignInState extends State<EmailAndPasswordTextFieldsSignIn> {
   bool obscureText = true;
-  late TextEditingController emailController;
-  late TextEditingController passwordController;
-
   @override
   void initState() {
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
+    var cubit=context.read<SignInCubit>();
+    cubit.emailController = TextEditingController();
+    cubit.passwordController = TextEditingController();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).brightness == Brightness.dark;
-    // var cubit = LoginCubit.of(context);
+    var cubit=context.read<SignInCubit>();
     return Form(
-      // key: cubit.formKey,
+      key: cubit.formKey,
       child: Column(
         children: [
           AppTextFormField(
-            controller: emailController,
+            controller: cubit.emailController,
             hintText: AppStrings.email,
             inputTextStyle: _inputColor(theme),
             backgroundColor: theme ? AppColors.kField2 : Colors.white,
@@ -51,7 +44,7 @@ class _EmailAndPasswordTextFieldsSignInState extends State<EmailAndPasswordTextF
           ),
           HelperMethod.verticalSpace(AppSizes.verticalSpacingS20),
           AppTextFormField(
-            controller: passwordController,
+            controller: cubit.passwordController,
             hintText: AppStrings.password,
             inputTextStyle: _inputColor(theme),
             backgroundColor: theme ? AppColors.kField2 : Colors.white,

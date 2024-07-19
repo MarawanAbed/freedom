@@ -20,7 +20,7 @@ class Freedom extends StatelessWidget {
         darkTheme: ThemeData.dark(),
         themeMode: ThemeMode.system,
         routes: AppRoutes.routes,
-        initialRoute: Routes.editProfilePage,
+        initialRoute: isOnBoarding ? Routes.authPage : Routes.onBoardingPage,
       ),
     );
   }
