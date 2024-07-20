@@ -10,31 +10,20 @@ import 'package:freedom_chat_app/freedom/onBoarding/presentation/pages/on_boardi
 import 'package:freedom_chat_app/freedom/search/presentation/pages/search_page.dart';
 import 'package:freedom_chat_app/freedom/sign_in/presentation/bloc/sign_in_cubit.dart';
 import 'package:freedom_chat_app/freedom/sign_in/presentation/pages/sign_in_page.dart';
-import 'package:freedom_chat_app/freedom/sign_up/presentation/bloc/sign_up_cubit.dart';
 import 'package:freedom_chat_app/freedom/sign_up/presentation/pages/complete_your_sign_up_page.dart';
 import 'package:freedom_chat_app/freedom/sign_up/presentation/pages/sign_up_page.dart';
 import 'package:freedom_chat_app/freedom/verify_email/presentation/pages/verify_email_page.dart';
 
 class AppRoutes {
-
   static final routes = <String, Widget Function(BuildContext)>{
     Routes.onBoardingPage: (context) => const OnBoardingPage(),
     Routes.authPage: (context) => const AuthPage(),
-    Routes.signInPage: (context) =>
-        BlocProvider(
+    Routes.signInPage: (context) => BlocProvider(
           create: (context) => getIt<SignInCubit>(),
           child: const SignInPage(),
         ),
-    Routes.signUpPage: (context) =>
-        BlocProvider(
-          create: (context) => getIt<SignUpCubit>(),
-          child: const SignUpPage(),
-        ),
-    Routes.completeYourSignUpPage: (context) =>
-        BlocProvider(
-          create: (context) => getIt<SignUpCubit>(),
-          child: const CompleteYourSignUpPage(),
-        ),
+    Routes.signUpPage: (context) => const SignUpPage(),
+    Routes.completeYourSignUpPage: (context) => const CompleteYourSignUpPage(),
     Routes.verifyEmailPage: (context) => const VerifyEmailPage(),
     Routes.homeLayout: (context) => const HomeLayout(),
     Routes.chatPage: (context) => const ChatPage(),

@@ -145,7 +145,10 @@ void _setupCubits() {
   getIt.registerFactory<GetUserCubit>(
     () => GetUserCubit(),
   );
-  getIt.registerFactory<SignUpCubit>(() => SignUpCubit());
+  getIt.registerFactory<SignUpCubit>(() => SignUpCubit(
+        getIt(),
+        getIt(),
+      ));
   // getIt.registerFactory<ForgetPasswordCubit>(
   //   () => ForgetPasswordCubit(
   //     getIt(),

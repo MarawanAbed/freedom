@@ -9,6 +9,8 @@ abstract class SignUpRemoteDataSource {
   Future<String> uploadImage(File imageFile);
 
   Future<void> createUser(UserModel user);
+
+  String? getUserId();
 }
 
 class SignUpRemoteDataSourceImpl extends SignUpRemoteDataSource {
@@ -16,12 +18,13 @@ class SignUpRemoteDataSourceImpl extends SignUpRemoteDataSource {
   final StorageService _storageService;
   final DatabaseService _databaseService;
 
-  SignUpRemoteDataSourceImpl({required AuthService authService,
-    required StorageService storageService,
-    required DatabaseService databaseService })
+  SignUpRemoteDataSourceImpl(
+      {required AuthService authService,
+      required StorageService storageService,
+      required DatabaseService databaseService})
       : _authService = authService,
         _storageService = storageService,
-        _databaseService=databaseService;
+        _databaseService = databaseService;
 
   @override
   Future<void> createUser(UserModel user) async {
@@ -29,12 +32,17 @@ class SignUpRemoteDataSourceImpl extends SignUpRemoteDataSource {
   }
 
   @override
-  Future<void> signUp(UserModel user) async{
-   await _authService.signUp(email: user.email!, password: user.password!);
+  Future<void> signUp(UserModel user) async {
+    await _authService.signUp(email: user.email!, password: user.password!);
   }
 
   @override
-  Future<String> uploadImage(File imageFile)async {
+  Future<String> uploadImage(File imageFile) async {
     return await _storageService.uploadImage(imageFile);
+  }
+
+  @override
+  String? getUserId()  {
+   return _authService.getCurrentUserId();
   }
 }

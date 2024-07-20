@@ -7,29 +7,29 @@ import 'package:freedom_chat_app/core/utils/sizes.dart';
 import 'package:freedom_chat_app/core/utils/strings.dart';
 import 'package:freedom_chat_app/core/widgets/please_pick_image.dart';
 import 'package:freedom_chat_app/core/widgets/profile_image.dart';
+import 'package:freedom_chat_app/freedom/sign_up/presentation/bloc/sign_up_cubit.dart';
 
 class ChangeProfileImage extends StatefulWidget {
-  const   ChangeProfileImage({super.key});
+  const ChangeProfileImage({super.key, required this.cubit});
+
+  final SignUpCubit cubit;
 
   @override
   State<ChangeProfileImage> createState() => _ChangeProfileImageState();
 }
 
 class _ChangeProfileImageState extends State<ChangeProfileImage> {
-
   @override
   initState() {
-    // var cubit = RegisterCubit.of(context);
-    // cubit.profileImage = null;
+    widget.cubit.profileImage = null;
     super.initState();
   }
 
   pickedImage() async {
     try {
-      // var cubit = RegisterCubit.of(context);
       File? newProfileImage = await HelperMethod.getImageFromGallery();
       setState(() {
-        // cubit.profileImage = newProfileImage;
+        widget.cubit.profileImage = newProfileImage;
       });
     } catch (e) {
       HelperMethod.showErrorToast(AppStrings.errorPickedImage,
@@ -39,14 +39,12 @@ class _ChangeProfileImageState extends State<ChangeProfileImage> {
 
   @override
   Widget build(BuildContext context) {
-    // var cubit = RegisterCubit.of(context);
-    //cubit.profileImage == null
-    //               ? null
-    //               : FileImage(cubit.profileImage!)
     return Column(
       children: [
         ProfileImage(
-          image:null ,
+          image: widget.cubit.profileImage == null
+              ? null
+              : FileImage(widget.cubit.profileImage!),
           radius: AppSizes.profileRadius,
         ),
         HelperMethod.verticalSpace(AppSizes.verticalSpacingS10),

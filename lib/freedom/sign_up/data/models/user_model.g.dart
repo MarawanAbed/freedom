@@ -16,6 +16,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       description: json['description'] as String?,
       isOnline: UserModel._fromJsonBool(json['isOnline']),
       source: json['source'] as String?,
+      address: json['address'] as String?,
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -27,5 +28,6 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'lastActive': const TimestampConverter().toJson(instance.lastActive),
       'description': instance.description,
       'isOnline': instance.isOnline,
+      'address': instance.address,
       'source': instance.source,
     };

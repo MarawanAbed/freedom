@@ -14,7 +14,7 @@ class UserModel {
   @JsonKey(fromJson: _fromJsonBool)
   final bool? isOnline;
   final String? source;
-
+  final String? address;
   UserModel({
     required this.uId,
     required this.name,
@@ -25,6 +25,7 @@ class UserModel {
     required this.description,
     required this.isOnline,
     required this.source,
+    required this.address,
   });
 
 

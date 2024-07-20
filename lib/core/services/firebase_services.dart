@@ -108,20 +108,22 @@ class AuthService {
     try {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
-        throw Exception('Google sign in aborted by user');
+        // Handle cancellation here
+        print('Google sign-in was cancelled by the user');
+        return; // Early return to stop further execution
       }
 
       // Force account selection
       await googleSignIn.signOut(); // Sign out to force account selection
       final GoogleSignInAccount? selectedGoogleUser =
-          await googleSignIn.signIn();
+      await googleSignIn.signIn();
 
       if (selectedGoogleUser == null) {
         throw Exception('Google sign in aborted by user');
       }
 
       final GoogleSignInAuthentication googleAuth =
-          await selectedGoogleUser.authentication;
+      await selectedGoogleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -129,34 +131,26 @@ class AuthService {
       await auth.signInWithCredential(credential);
 
       final currentUser = auth.currentUser;
-      // final userModel = UserModel(
-      //   uId: currentUser?.uid ?? '',
-      //   name: currentUser?.displayName ?? '',
-      //   email: currentUser?.email ?? '',
-      //   image: currentUser?.photoURL ?? 'https://via.placeholder.com/150',
-      //   password: 'Empty password field',
-      //   phone: 'Empty phone field',
-      //   dataSource: 'Google',
-      //   address: 'Empty address field',
-      // );
-      // final customer=await getIt<RegisterRemoteDataSource>().createCustomer(
-      //   CustomerModel(
-      //     name: currentUser?.displayName ?? '',
-      //     email: currentUser?.email ?? '',
-      //     phone: 'Empty phone field',
-      //     id: currentUser?.uid ?? '',
-      //   ),
-      // );
-      // await getIt<SharedPreCacheHelper>().setCustomerId(customer.id!);
-      // await getIt<DatabaseService>().createUser(userModel);
-      // await getIt<DatabaseService>().updateUser({
-      //   'lastActive': DateTime.now(),
-      //   'uId': auth.currentUser!.uid,
-      //   'isOnline': true,
-      // });
+      final userModel = UserModel(
+        uId: currentUser?.uid ?? '',
+        name: currentUser?.displayName ?? '',
+        email: currentUser?.email ?? '',
+        image: currentUser?.photoURL ?? 'https://via.placeholder.com/150',
+        password: 'Non readable password',
+        lastActive: DateTime.now(),
+        description: 'Hello World',
+        isOnline: true,
+        source: 'Google',
+        address: 'Cairo Egypt',
+      );
+      await getIt<DatabaseService>().createUser(userModel);
+      await getIt<DatabaseService>().updateUser({
+        'lastActive': DateTime.now(),
+        'uId': auth.currentUser!.uid,
+        'isOnline': true,
+      });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'account-exists-with-different-credential') {
-        // Handle the case where the email already exists
         throw Exception(
             'An account already exists with the same email address. Please try another one.');
       } else {
@@ -171,7 +165,12 @@ class AuthService {
   Future<void> signInWithTwitter() async {
     try {
       final authResult = await twitterLogin.login();
-
+      if (authResult.status == TwitterLoginStatus.cancelledByUser) {
+        throw ('Twitter sign-in was cancelled by the user');
+      } else if (authResult.status == TwitterLoginStatus.error) {
+        print('Twitter sign-in error: ${authResult.errorMessage}');
+        return;
+      }
       final twitterAuthCredential = TwitterAuthProvider.credential(
         accessToken: authResult.authToken!,
         secret: authResult.authTokenSecret!,
@@ -188,32 +187,26 @@ class AuthService {
         throw Exception(
             'No email found for this user. Please verify your email with Twitter or enter it manually.');
       }
-      //
-      // final userModel = UserModel(
-      //   uId: currentUser?.uid ?? '',
-      //   name: currentUser?.displayName ?? '',
-      //   email: userEmail,
-      //   image: currentUser?.photoURL ?? '',
-      //   password: 'Empty password field',
-      //   phone: 'Empty phone field',
-      //   dataSource: 'Twitter',
-      //   address: 'Empty address field',
-      // );
-      // final customer= await getIt<RegisterRemoteDataSource>().createCustomer(
-      //   CustomerModel(
-      //     name: currentUser?.displayName ?? '',
-      //     email: userEmail,
-      //     phone: 'Empty phone field',
-      //     id: currentUser?.uid ?? '',
-      //   ),
-      // );
-      // await getIt<SharedPreCacheHelper>().setCustomerId(customer.id!);
-      // await getIt<DatabaseService>().createUser(userModel);
-      // await getIt<DatabaseService>().updateUser({
-      //   'lastActive': DateTime.now(),
-      //   'uId': auth.currentUser!.uid,
-      //   'isOnline': true,
-      // });
+
+      final userModel = UserModel(
+        uId: currentUser?.uid ?? '',
+        name: currentUser?.displayName ?? '',
+        email: userEmail,
+        image: currentUser?.photoURL ?? '',
+        password: 'Non readable password',
+        address: 'Cairo Egypt',
+        lastActive: DateTime.now(),
+        description: 'Hello World',
+        isOnline: true,
+        source: 'Twitter',
+      );
+
+      await getIt<DatabaseService>().createUser(userModel);
+      await getIt<DatabaseService>().updateUser({
+        'lastActive': DateTime.now(),
+        'uId': auth.currentUser!.uid,
+        'isOnline': true,
+      });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'account-exists-with-different-credential') {
         throw Exception(
@@ -230,43 +223,41 @@ class AuthService {
   Future<void> signInWithGithub(context) async {
     try {
       final result = await gitHubSignIn.signIn(context);
-
+      if (result == null) {
+        throw Exception('GitHub sign-in was cancelled by the user');
+      }
+      // Check if the token is null
+      if (result.token == null) {
+        throw Exception('GitHub sign-in was cancelled by the user');
+      }
       final githubAuthCredential = GithubAuthProvider.credential(result.token!);
 
-      // Sign in with the GitHub credential
       await FirebaseAuth.instance.signInWithCredential(githubAuthCredential);
 
       final currentUser = auth.currentUser;
 
+      // Proceed with your logic after successful sign-in
       const String userName = 'user';
-      // final userModel = UserModel(
-      //   uId: currentUser?.uid ?? '',
-      //   name: userName,
-      //   email: currentUser?.email ?? '',
-      //   image: currentUser?.photoURL ?? '',
-      //   password: 'Empty password field',
-      //   phone: 'Empty phone field',
-      //   dataSource: 'GitHub',
-      //   address: 'Empty address field',
-      // );
-      // final customer= await getIt<RegisterRemoteDataSource>().createCustomer(
-      //   CustomerModel(
-      //     name: userName,
-      //     email: currentUser?.email ?? '',
-      //     phone: 'Empty phone field',
-      //     id: currentUser?.uid ?? '',
-      //   ),
-      // );
-      // await getIt<SharedPreCacheHelper>().setCustomerId(customer.id!);
-      // await getIt<DatabaseService>().createUser(userModel);
-      // // await getIt<DatabaseService>().updateUser({
-      // //   'lastActive': DateTime.now(),
-      // //   'uId': auth.currentUser!.uid,
-      // //   'isOnline': true,
-      // // });
+      final userModel = UserModel(
+        uId: currentUser?.uid ?? '',
+        name: userName,
+        email: currentUser?.email ?? '',
+        image: currentUser?.photoURL ?? '',
+        password: 'Non readable password',
+        isOnline: true,
+        source: 'GitHub',
+        address: 'Empty address field',
+        description: 'Hello World',
+        lastActive: DateTime.now(),
+      );
+      await getIt<DatabaseService>().createUser(userModel);
+      await getIt<DatabaseService>().updateUser({
+        'lastActive': DateTime.now(),
+        'uId': auth.currentUser!.uid,
+        'isOnline': true,
+      });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'account-exists-with-different-credential') {
-        // Handle the case where the email already exists
         throw Exception(
             'An account already exists with the same email address. Please try another one.');
       } else {

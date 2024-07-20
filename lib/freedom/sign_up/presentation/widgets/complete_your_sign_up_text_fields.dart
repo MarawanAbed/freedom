@@ -6,43 +6,50 @@ import 'package:freedom_chat_app/core/themes/styles.dart';
 import 'package:freedom_chat_app/core/utils/sizes.dart';
 import 'package:freedom_chat_app/core/utils/strings.dart';
 import 'package:freedom_chat_app/core/widgets/app_text_form.dart';
+import 'package:freedom_chat_app/freedom/sign_up/presentation/bloc/sign_up_cubit.dart';
 
 class CompleteYourSignUpTextFieldSignUp extends StatefulWidget {
-  const CompleteYourSignUpTextFieldSignUp({super.key});
+  const CompleteYourSignUpTextFieldSignUp({super.key, required this.cubit});
+
+  final SignUpCubit cubit;
 
   @override
-  State<CompleteYourSignUpTextFieldSignUp> createState() => _CompleteYourSignUpTextFieldSignUpState();
+  State<CompleteYourSignUpTextFieldSignUp> createState() =>
+      _CompleteYourSignUpTextFieldSignUpState();
 }
 
-class _CompleteYourSignUpTextFieldSignUpState extends State<CompleteYourSignUpTextFieldSignUp> {
+class _CompleteYourSignUpTextFieldSignUpState
+    extends State<CompleteYourSignUpTextFieldSignUp> {
   bool obscureText = true;
-
-  late TextEditingController nameController;
-  late TextEditingController descriptionController;
-  late TextEditingController addressController;
 
   @override
   void initState() {
-    nameController = TextEditingController();
-    descriptionController = TextEditingController();
-    addressController = TextEditingController();
+    var cubit = widget.cubit;
+    cubit.nameController = TextEditingController();
+    cubit.descriptionController = TextEditingController();
+    cubit.addressController = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    nameController.dispose();
-    descriptionController.dispose();
+    var cubit = widget.cubit;
+    cubit.nameController.dispose();
+    cubit.descriptionController.dispose();
+    cubit.addressController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).brightness == Brightness.dark;
+    var cubit = widget.cubit;
     return Form(
+      key: cubit.formKey,
       child: Column(
         children: [
           AppTextFormField(
-            controller: nameController,
+            controller: cubit.nameController,
             hintText: AppStrings.name,
             inputTextStyle: _inputColor(theme),
             backgroundColor: theme ? AppColors.kField2 : Colors.white,
@@ -51,7 +58,7 @@ class _CompleteYourSignUpTextFieldSignUpState extends State<CompleteYourSignUpTe
           ),
           HelperMethod.verticalSpace(AppSizes.verticalSpacingS20),
           AppTextFormField(
-            controller: descriptionController,
+            controller: cubit.descriptionController,
             hintText: AppStrings.description,
             inputTextStyle: _inputColor(theme),
             backgroundColor: theme ? AppColors.kField2 : Colors.white,
@@ -61,7 +68,7 @@ class _CompleteYourSignUpTextFieldSignUpState extends State<CompleteYourSignUpTe
           ),
           HelperMethod.verticalSpace(AppSizes.verticalSpacingS20),
           AppTextFormField(
-            controller: addressController,
+            controller: cubit.addressController,
             hintText: AppStrings.address,
             inputTextStyle: _inputColor(theme),
             backgroundColor: theme ? AppColors.kField2 : Colors.white,

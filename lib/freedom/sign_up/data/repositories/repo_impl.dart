@@ -1,44 +1,48 @@
 import 'dart:io';
 
+import 'package:freedom_chat_app/freedom/sign_up/data/data_sources/remote_data_source.dart';
 import 'package:freedom_chat_app/freedom/sign_up/data/models/user_model.dart';
 import 'package:freedom_chat_app/freedom/sign_up/domain/repositories/repo.dart';
 
 class SignUpRepositoryImpl implements SignUpRepository {
-  final SignUpRepository _repo;
+  final SignUpRemoteDataSource _repo;
 
-  SignUpRepositoryImpl({required SignUpRepository repo}) : _repo = repo;
+  SignUpRepositoryImpl({required SignUpRemoteDataSource repo}) : _repo = repo;
 
   @override
-  Future<void> createUser(UserModel user)async {
-    try
-    {
+  Future<void> createUser(UserModel user) async {
+    try {
       await _repo.createUser(user);
-    }
-    catch(e){
+    } catch (e) {
       print(e);
     }
   }
 
   @override
-  Future<void> signUp(UserModel user)async {
-    try
-    {
+  Future<void> signUp(UserModel user) async {
+    try {
       await _repo.signUp(user);
-    }
-    catch(e){
+    } catch (e) {
       print(e);
     }
   }
 
   @override
-  Future<String> uploadImage(File imageFile)async {
-    try
-    {
+  Future<String> uploadImage(File imageFile) async {
+    try {
       return await _repo.uploadImage(imageFile);
-    }
-    catch(e){
+    } catch (e) {
       print(e);
       return '';
+    }
   }
-}
+
+  @override
+  String? getUserId() {
+    try {
+      return _repo.getUserId();
+    } catch (e) {
+      print(e);
+    }
+  }
 }
