@@ -29,7 +29,13 @@ class ProfileBody extends StatelessWidget {
             HelperMethod.verticalSpace(AppSizes.verticalSpacingS30),
             CustomElevatedButton(
               onPressed: () {
-                context.pushNamed(Routes.editProfilePage, arguments: user);
+                if(user.source=='local')
+                {
+                  context.pushNamed(Routes.editProfilePage, arguments: user);
+                }else
+                {
+                  HelperMethod.showErrorToast('You cant Edit Profile from ${user.source} account');
+                }
               },
               title: AppStrings.editProfile,
             ),
