@@ -55,7 +55,7 @@ class AppSizes {
   static double kDefaultBorderRadiusS20 = 20.0.r;
   static double kDefaultBorderRadiusS30 = 30.0.r;
   static double profileRadius = 50.0.r;
-  static double circleAvatarRadius = 20.0.r;
+  static double circleAvatarRadius = 50.0;
   static double customProfileImageRadius = 25.0.r;
   static double fontSizeS10 = 10.0.sp;
   static double fontSizeS12 = 12.0.sp;

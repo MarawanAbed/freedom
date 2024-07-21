@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:freedom_chat_app/core/helpers/extension.dart';
+import 'package:freedom_chat_app/core/routes/routes.dart';
 import 'package:freedom_chat_app/core/themes/styles.dart';
 import 'package:freedom_chat_app/core/utils/sizes.dart';
 import 'package:freedom_chat_app/core/widgets/custom_profile_image.dart';
+import 'package:freedom_chat_app/freedom/sign_up/data/models/user_model.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 
 class UserItems extends StatelessWidget {
   const UserItems({
-    super.key,
+    super.key, required this.user,
   });
+  final UserModel user;
 
   @override
   Widget build(BuildContext context) {
@@ -16,19 +20,19 @@ class UserItems extends StatelessWidget {
       onRefresh: () async {},
       child: GestureDetector(
         onTap: () {
-          // context.pushNamed(Routes.chatScreen, arguments: user);
+          context.pushNamed(Routes.chatPage, arguments: user);
         },
         child: ListTile(
-          leading: const CustomProfileImage(),
+          leading:  CustomProfileImage(user: user,),
           title: Text(
-            'marwan',
+            user.name!,
             style: TextStyles.font18Normal,
           ),
           contentPadding: EdgeInsets.all(AppSizes.kDefaultAllPaddingS10),
           subtitle: Padding(
             padding: EdgeInsets.only(top: AppSizes.kDefaultAllPaddingS10),
             child: Text(
-              'last message',
+              user.email!,
               style: TextStyles.font14NormalGrey,
               textAlign: TextAlign.start,
               overflow: TextOverflow.ellipsis,
@@ -36,7 +40,7 @@ class UserItems extends StatelessWidget {
             ),
           ),
           trailing: Text(
-            timeago.format(DateTime.now()),
+            timeago.format(user.lastActive!),
             style: TextStyles.font14Normal,
           ),
         ),

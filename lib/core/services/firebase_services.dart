@@ -37,6 +37,8 @@ class AuthService {
       );
       await getIt<DatabaseService>().updateUser({
         'uId': auth.currentUser!.uid,
+        'lastActive': DateTime.now(),
+        'isOnline': true,
       });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -224,7 +226,6 @@ class AuthService {
       if (result == null) {
         throw Exception('GitHub sign-in was cancelled by the user');
       }
-      // Check if the token is null
       if (result.token == null) {
         throw Exception('GitHub sign-in was cancelled by the user');
       }
@@ -234,7 +235,6 @@ class AuthService {
 
       final currentUser = auth.currentUser;
 
-      // Proceed with your logic after successful sign-in
       const String userName = 'user';
       final userModel = UserModel(
         uId: currentUser?.uid ?? '',
@@ -343,20 +343,20 @@ class DatabaseService {
   }
 
 //
-// Stream<List<UserModel>> getAllUsers() {
-//   final userCollection = _fireStore
-//       .collection('users')
-//       .orderBy('lastActive', descending: true)
-//       .snapshots(includeMetadataChanges: true);
-//   return userCollection.map((querySnapshot) {
-//     if (querySnapshot.docs.isEmpty) {
-//       return [];
-//     }
-//     return querySnapshot.docs
-//         .map((e) => UserModel.fromJson(e.data()))
-//         .toList();
-//   });
-// }
+Stream<List<UserModel>> getAllUsers() {
+  final userCollection = fireStore
+      .collection('users')
+      .orderBy('lastActive', descending: true)
+      .snapshots(includeMetadataChanges: true);
+  return userCollection.map((querySnapshot) {
+    if (querySnapshot.docs.isEmpty) {
+      return [];
+    }
+    return querySnapshot.docs
+        .map((e) => UserModel.fromJson(e.data()))
+        .toList();
+  });
+}
 //
   Future<void> updateUser(Map<String, dynamic> data) async {
     try {

@@ -28,6 +28,6 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'lastActive': const TimestampConverter().toJson(instance.lastActive),
       'description': instance.description,
       'isOnline': instance.isOnline,
-      'address': instance.address,
       'source': instance.source,
+      'address': instance.address,
     };

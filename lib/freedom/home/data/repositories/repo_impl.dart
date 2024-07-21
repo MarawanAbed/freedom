@@ -19,4 +19,16 @@ class HomeRepoImpl extends HomeRepo
       throw e;
     }
   }
+
+  @override
+  Future<void> updateUser(Map<String,dynamic>user)async {
+    try
+    {
+      await homeDataSource.updateUser(user);
+    }
+    catch(e)
+    {
+      throw e;
+    }
+  }
 }

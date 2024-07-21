@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'get_all_users_cubit.dart';
+part of 'home_cubit.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,12 +15,12 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$GetAllUsersState {
+mixin _$HomeState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<Users> users) success,
+    required TResult Function(List<UserModel> users) success,
     required TResult Function(String message) error,
   }) =>
       throw _privateConstructorUsedError;
@@ -28,7 +28,7 @@ mixin _$GetAllUsersState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<Users> users)? success,
+    TResult? Function(List<UserModel> users)? success,
     TResult? Function(String message)? error,
   }) =>
       throw _privateConstructorUsedError;
@@ -36,7 +36,7 @@ mixin _$GetAllUsersState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Users> users)? success,
+    TResult Function(List<UserModel> users)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) =>
@@ -69,16 +69,15 @@ mixin _$GetAllUsersState {
 }
 
 /// @nodoc
-abstract class $GetAllUsersStateCopyWith<$Res> {
-  factory $GetAllUsersStateCopyWith(
-          GetAllUsersState value, $Res Function(GetAllUsersState) then) =
-      _$GetAllUsersStateCopyWithImpl<$Res, GetAllUsersState>;
+abstract class $HomeStateCopyWith<$Res> {
+  factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) then) =
+      _$HomeStateCopyWithImpl<$Res, HomeState>;
 }
 
 /// @nodoc
-class _$GetAllUsersStateCopyWithImpl<$Res, $Val extends GetAllUsersState>
-    implements $GetAllUsersStateCopyWith<$Res> {
-  _$GetAllUsersStateCopyWithImpl(this._value, this._then);
+class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
+    implements $HomeStateCopyWith<$Res> {
+  _$HomeStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -95,7 +94,7 @@ abstract class _$$InitialImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$InitialImplCopyWithImpl<$Res>
-    extends _$GetAllUsersStateCopyWithImpl<$Res, _$InitialImpl>
+    extends _$HomeStateCopyWithImpl<$Res, _$InitialImpl>
     implements _$$InitialImplCopyWith<$Res> {
   __$$InitialImplCopyWithImpl(
       _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
@@ -109,7 +108,7 @@ class _$InitialImpl implements _Initial {
 
   @override
   String toString() {
-    return 'GetAllUsersState.initial()';
+    return 'HomeState.initial()';
   }
 
   @override
@@ -126,7 +125,7 @@ class _$InitialImpl implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<Users> users) success,
+    required TResult Function(List<UserModel> users) success,
     required TResult Function(String message) error,
   }) {
     return initial();
@@ -137,7 +136,7 @@ class _$InitialImpl implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<Users> users)? success,
+    TResult? Function(List<UserModel> users)? success,
     TResult? Function(String message)? error,
   }) {
     return initial?.call();
@@ -148,7 +147,7 @@ class _$InitialImpl implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Users> users)? success,
+    TResult Function(List<UserModel> users)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -196,7 +195,7 @@ class _$InitialImpl implements _Initial {
   }
 }
 
-abstract class _Initial implements GetAllUsersState {
+abstract class _Initial implements HomeState {
   const factory _Initial() = _$InitialImpl;
 }
 
@@ -209,7 +208,7 @@ abstract class _$$LoadingImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$LoadingImplCopyWithImpl<$Res>
-    extends _$GetAllUsersStateCopyWithImpl<$Res, _$LoadingImpl>
+    extends _$HomeStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
       _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
@@ -223,7 +222,7 @@ class _$LoadingImpl implements Loading {
 
   @override
   String toString() {
-    return 'GetAllUsersState.loading()';
+    return 'HomeState.loading()';
   }
 
   @override
@@ -240,7 +239,7 @@ class _$LoadingImpl implements Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<Users> users) success,
+    required TResult Function(List<UserModel> users) success,
     required TResult Function(String message) error,
   }) {
     return loading();
@@ -251,7 +250,7 @@ class _$LoadingImpl implements Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<Users> users)? success,
+    TResult? Function(List<UserModel> users)? success,
     TResult? Function(String message)? error,
   }) {
     return loading?.call();
@@ -262,7 +261,7 @@ class _$LoadingImpl implements Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Users> users)? success,
+    TResult Function(List<UserModel> users)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -310,7 +309,7 @@ class _$LoadingImpl implements Loading {
   }
 }
 
-abstract class Loading implements GetAllUsersState {
+abstract class Loading implements HomeState {
   const factory Loading() = _$LoadingImpl;
 }
 
@@ -320,12 +319,12 @@ abstract class _$$SuccessImplCopyWith<$Res> {
           _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
       __$$SuccessImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<Users> users});
+  $Res call({List<UserModel> users});
 }
 
 /// @nodoc
 class __$$SuccessImplCopyWithImpl<$Res>
-    extends _$GetAllUsersStateCopyWithImpl<$Res, _$SuccessImpl>
+    extends _$HomeStateCopyWithImpl<$Res, _$SuccessImpl>
     implements _$$SuccessImplCopyWith<$Res> {
   __$$SuccessImplCopyWithImpl(
       _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
@@ -340,7 +339,7 @@ class __$$SuccessImplCopyWithImpl<$Res>
       null == users
           ? _value._users
           : users // ignore: cast_nullable_to_non_nullable
-              as List<Users>,
+              as List<UserModel>,
     ));
   }
 }
@@ -348,11 +347,11 @@ class __$$SuccessImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$SuccessImpl implements Success {
-  const _$SuccessImpl(final List<Users> users) : _users = users;
+  const _$SuccessImpl(final List<UserModel> users) : _users = users;
 
-  final List<Users> _users;
+  final List<UserModel> _users;
   @override
-  List<Users> get users {
+  List<UserModel> get users {
     if (_users is EqualUnmodifiableListView) return _users;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_users);
@@ -360,7 +359,7 @@ class _$SuccessImpl implements Success {
 
   @override
   String toString() {
-    return 'GetAllUsersState.success(users: $users)';
+    return 'HomeState.success(users: $users)';
   }
 
   @override
@@ -386,7 +385,7 @@ class _$SuccessImpl implements Success {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<Users> users) success,
+    required TResult Function(List<UserModel> users) success,
     required TResult Function(String message) error,
   }) {
     return success(users);
@@ -397,7 +396,7 @@ class _$SuccessImpl implements Success {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<Users> users)? success,
+    TResult? Function(List<UserModel> users)? success,
     TResult? Function(String message)? error,
   }) {
     return success?.call(users);
@@ -408,7 +407,7 @@ class _$SuccessImpl implements Success {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Users> users)? success,
+    TResult Function(List<UserModel> users)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -456,10 +455,10 @@ class _$SuccessImpl implements Success {
   }
 }
 
-abstract class Success implements GetAllUsersState {
-  const factory Success(final List<Users> users) = _$SuccessImpl;
+abstract class Success implements HomeState {
+  const factory Success(final List<UserModel> users) = _$SuccessImpl;
 
-  List<Users> get users;
+  List<UserModel> get users;
   @JsonKey(ignore: true)
   _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -476,7 +475,7 @@ abstract class _$$ErrorImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$ErrorImplCopyWithImpl<$Res>
-    extends _$GetAllUsersStateCopyWithImpl<$Res, _$ErrorImpl>
+    extends _$HomeStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
       _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
@@ -506,7 +505,7 @@ class _$ErrorImpl implements Error {
 
   @override
   String toString() {
-    return 'GetAllUsersState.error(message: $message)';
+    return 'HomeState.error(message: $message)';
   }
 
   @override
@@ -531,7 +530,7 @@ class _$ErrorImpl implements Error {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<Users> users) success,
+    required TResult Function(List<UserModel> users) success,
     required TResult Function(String message) error,
   }) {
     return error(message);
@@ -542,7 +541,7 @@ class _$ErrorImpl implements Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<Users> users)? success,
+    TResult? Function(List<UserModel> users)? success,
     TResult? Function(String message)? error,
   }) {
     return error?.call(message);
@@ -553,7 +552,7 @@ class _$ErrorImpl implements Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Users> users)? success,
+    TResult Function(List<UserModel> users)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -601,7 +600,7 @@ class _$ErrorImpl implements Error {
   }
 }
 
-abstract class Error implements GetAllUsersState {
+abstract class Error implements HomeState {
   const factory Error(final String message) = _$ErrorImpl;
 
   String get message;

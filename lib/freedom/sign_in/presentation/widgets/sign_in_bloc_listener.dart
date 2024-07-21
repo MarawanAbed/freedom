@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:freedom_chat_app/core/helpers/extension.dart';
+import 'package:freedom_chat_app/core/routes/routes.dart';
 import 'package:freedom_chat_app/core/utils/strings.dart';
 import 'package:freedom_chat_app/freedom/sign_in/presentation/bloc/sign_in_cubit.dart';
 import '../../../../core/helpers/helper_methods.dart';
@@ -28,14 +30,14 @@ class SignInBlocListener extends StatelessWidget {
               AppStrings.signInSuccess,
               gravity: ToastGravity.BOTTOM,
             );
-            // context.pushReplacementNamed(Routes.homeScreen);
+            context.pushNamedAndRemoveUntil(Routes.homeLayout, predicate: (route) => false);
           },
           successWithGitHub: () {
             HelperMethod.showSuccessToast(
               AppStrings.signInSuccess,
               gravity: ToastGravity.BOTTOM,
             );
-            // context.pushReplacementNamed(Routes.homeScreen);
+            context.pushNamedAndRemoveUntil(Routes.homeLayout, predicate: (route) => false);
           },
           errorWithGitHub: (message) {
             HelperMethod.showErrorToast(message, gravity: ToastGravity.BOTTOM);

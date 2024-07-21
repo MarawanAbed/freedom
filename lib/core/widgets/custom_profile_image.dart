@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:freedom_chat_app/core/utils/sizes.dart';
+import 'package:freedom_chat_app/freedom/sign_up/data/models/user_model.dart';
 
 class CustomProfileImage extends StatelessWidget {
-  const CustomProfileImage({super.key, });
+  const CustomProfileImage({super.key, required this.user, });
 
-
+  final UserModel user;
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        CircleAvatar(
-          radius: AppSizes.circleAvatarRadius,
-          child: ClipRRect(
-              borderRadius: BorderRadius.circular(25),
-              child: Image.network(
-                'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
-                fit: BoxFit.cover,
-              )),
+        Container(
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: NetworkImage(user.image!),
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
-        if (true) Positioned(
+        if (user.isOnline!) Positioned(
           right: 0,
           bottom: 0,
           child: Container(
-            width: AppSizes.userStateSizeWidth,
-            height: AppSizes.userStateSizeHeight,
+            width: 15,
+            height: 15,
             decoration: BoxDecoration(
               color: Colors.green,
               shape: BoxShape.circle,
@@ -37,8 +40,8 @@ class CustomProfileImage extends StatelessWidget {
           right: 0,
           bottom: 0,
           child: Container(
-            width: AppSizes.userStateSizeWidth,
-            height: AppSizes.userStateSizeHeight,
+            width: 15,
+            height: 15,
             decoration: BoxDecoration(
               color: Colors.red,
               shape: BoxShape.circle,

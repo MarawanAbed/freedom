@@ -11,6 +11,11 @@ import 'package:freedom_chat_app/freedom/chat/domain/use_cases/send_message.dart
 import 'package:freedom_chat_app/freedom/chat/presentation/bloc/get_all_messages_cubit.dart';
 import 'package:freedom_chat_app/freedom/chat/presentation/bloc/send_messages_cubit.dart';
 import 'package:freedom_chat_app/freedom/edit_profile/domain/use_cases/update_profile.dart';
+import 'package:freedom_chat_app/freedom/home/data/data_sources/remote_data_source.dart';
+import 'package:freedom_chat_app/freedom/home/data/repositories/repo_impl.dart';
+import 'package:freedom_chat_app/freedom/home/domain/repositories/repo.dart';
+import 'package:freedom_chat_app/freedom/home/domain/use_case/update_user.dart';
+import 'package:freedom_chat_app/freedom/home/presentation/bloc/home_cubit.dart';
 import 'package:freedom_chat_app/freedom/profile/presentation/bloc/get_user_cubit.dart';
 import 'package:freedom_chat_app/freedom/search/domain/use_cases/search_users.dart';
 import 'package:freedom_chat_app/freedom/sign_in/data/data_sources/remote_data_source.dart';
@@ -74,8 +79,8 @@ void _setupDataSources() {
             storageService: getIt(),
             databaseService: getIt(),
           ));
-  // getIt.registerLazySingleton<ForgetRemoteDataSource>(
-  //         () => ForgetRemoteDataSourceImpl(auth: getIt()));
+  getIt.registerLazySingleton<HomeRemoteDataSource>(
+          () => HomeRemoteDataSourceImpl(service: getIt()));
   // getIt.registerLazySingleton<ChatRemoteDataSource>(
   //       () => ChatRemoteDataSourceImpl(getIt(), getIt(), getIt()),
   // );
@@ -84,7 +89,7 @@ void _setupDataSources() {
 void _setupRepositories() {
   getIt.registerLazySingleton<SignInRepo>(
       () => SignInRepoImpl(signInRemoteDataSource: getIt()));
-  // getIt.registerLazySingleton<HomeRepo>(() => HomeRepoImpl((getIt())));
+  getIt.registerLazySingleton<HomeRepo>(() => HomeRepoImpl(homeDataSource: getIt()));
   // getIt.registerLazySingleton<LoginInRepo>(() => LoginRepoImpl(getIt()));
   getIt.registerLazySingleton<SignUpRepository>(
       () => SignUpRepositoryImpl(repo: getIt()));
@@ -96,6 +101,8 @@ void _setupRepositories() {
 void _setupUseCases() {
   getIt.registerLazySingleton<SendEmailVerificationUseCase>(
       () => SendEmailVerificationUseCase(repo: getIt()));
+  getIt.registerLazySingleton<UpdateUserUseCase>(
+          () => UpdateUserUseCase(repo: getIt()));
   getIt.registerLazySingleton<SignOutUseCase>(
           () => SignOutUseCase(repo: getIt()));
   getIt
@@ -139,12 +146,11 @@ void _setupCubits() {
   //     getIt(),
   //   ),
   // );
-  // getIt.registerFactory<GetAllUserCubit>(
-  //   () => GetAllUserCubit(
-  //     getIt(),
-  //     getIt(),
-  //   ),
-  // );
+  getIt.registerFactory<HomeCubit>(
+    () => HomeCubit(
+      getIt(),
+    ),
+  );
   getIt.registerFactory<GetUserCubit>(
     () => GetUserCubit(),
   );
