@@ -4,22 +4,24 @@ import 'package:freedom_chat_app/core/themes/styles.dart';
 import 'package:freedom_chat_app/core/utils/sizes.dart';
 import 'package:freedom_chat_app/core/widgets/profile_image.dart';
 
+import '../../../sign_up/data/models/user_model.dart';
+
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({
-    super.key,
+    super.key, required this.user,
   });
-
+  final UserModel user;
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ProfileImage(
-          image: const NetworkImage('https://picsum.photos/200'),
-          radius: AppSizes.profileRadius,
+          image:  NetworkImage(user.image!,),
+          radius: 50,
         ),
         HelperMethod.verticalSpace(AppSizes.verticalSpacingS30),
         Text(
-          'marwan',
+          user.name!,
           style: TextStyles.font22Bold,
         ),
       ],

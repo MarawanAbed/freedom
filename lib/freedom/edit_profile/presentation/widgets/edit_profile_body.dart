@@ -19,9 +19,7 @@ class EditProfileBody extends StatelessWidget {
             HelperMethod.verticalSpace(AppSizes.verticalSpacingS20),
             const ChangeProfileImage(image: null),
             HelperMethod.verticalSpace(AppSizes.verticalSpacingS20),
-            const EdtProfileTextForm(
-
-            ),
+            const EdtProfileTextForm(),
             HelperMethod.verticalSpace(AppSizes.verticalSpacingS30),
             CustomElevatedButton(
               title: AppStrings.saveChanges,

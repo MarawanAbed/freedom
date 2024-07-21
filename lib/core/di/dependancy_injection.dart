@@ -16,6 +16,9 @@ import 'package:freedom_chat_app/freedom/home/data/repositories/repo_impl.dart';
 import 'package:freedom_chat_app/freedom/home/domain/repositories/repo.dart';
 import 'package:freedom_chat_app/freedom/home/domain/use_case/update_user.dart';
 import 'package:freedom_chat_app/freedom/home/presentation/bloc/home_cubit.dart';
+import 'package:freedom_chat_app/freedom/profile/data/data_sources/remote_data_source.dart';
+import 'package:freedom_chat_app/freedom/profile/data/repositories/repo_impl.dart';
+import 'package:freedom_chat_app/freedom/profile/domain/repositories/repo.dart';
 import 'package:freedom_chat_app/freedom/profile/presentation/bloc/get_user_cubit.dart';
 import 'package:freedom_chat_app/freedom/search/domain/use_cases/search_users.dart';
 import 'package:freedom_chat_app/freedom/sign_in/data/data_sources/remote_data_source.dart';
@@ -81,6 +84,8 @@ void _setupDataSources() {
           ));
   getIt.registerLazySingleton<HomeRemoteDataSource>(
           () => HomeRemoteDataSourceImpl(service: getIt()));
+  getIt.registerLazySingleton<ProfileRemoteDataSource>(
+          () => ProfileRemoteDataSourceImpl(profileService: getIt()));
   // getIt.registerLazySingleton<ChatRemoteDataSource>(
   //       () => ChatRemoteDataSourceImpl(getIt(), getIt(), getIt()),
   // );
@@ -96,6 +101,8 @@ void _setupRepositories() {
   // getIt.registerLazySingleton<ForgetRepo>(() => ForgetRepoImpl(getIt()));
   getIt.registerLazySingleton<VerifyRepository>(
       () => VerifyRepoImpl(verifyDataSource: getIt()));
+  getIt.registerLazySingleton<ProfileRepo>(
+          () => ProfileRepoImpl(profileDataSource: getIt()));
 }
 
 void _setupUseCases() {
@@ -152,7 +159,9 @@ void _setupCubits() {
     ),
   );
   getIt.registerFactory<GetUserCubit>(
-    () => GetUserCubit(),
+    () => GetUserCubit(
+      getIt(),
+    ),
   );
   getIt.registerFactory<SignUpCubit>(() => SignUpCubit(
         getIt(),
