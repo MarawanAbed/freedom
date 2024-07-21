@@ -2,11 +2,10 @@ import 'package:freedom_chat_app/core/services/firebase_services.dart';
 
 abstract class VerifyRemoteDataSource
 {
-  Future<void> sendVerificationEmail();
-
-  Future<bool>isEmailVerified();
-
-  bool userVerified();
+  Future<void> sendEmailVerification();
+  Future<void> signOut();
+  bool isEmailVerified();
+  Future<void> reloadUser();
 }
 
 class VerifyRemoteDataSourceImpl extends VerifyRemoteDataSource
@@ -16,19 +15,24 @@ class VerifyRemoteDataSourceImpl extends VerifyRemoteDataSource
   VerifyRemoteDataSourceImpl({required AuthService authService}):_authService=authService;
 
   @override
-  Future<void> sendVerificationEmail() async
-  {
-    await _authService.sendVerificationEmail();
+  bool isEmailVerified() {
+    return _authService.emailVerified();
   }
 
   @override
-  Future<bool> isEmailVerified() async
-  {
-    return await _authService.isEmailVerified();
+  Future<void> reloadUser() async{
+    await _authService.reloadUser();
   }
 
   @override
-  bool userVerified() {
-    return _authService.userVerified();
+  Future<void> sendEmailVerification() async{
+    await _authService.sendEmailVerification();
   }
+
+  @override
+  Future<void> signOut()async {
+    await _authService.signOut();
+  }
+
+
 }

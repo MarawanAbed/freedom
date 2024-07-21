@@ -30,6 +30,7 @@ import 'package:freedom_chat_app/freedom/verify_email/data/data_sources/remote_d
 import 'package:freedom_chat_app/freedom/verify_email/data/repositories/repo_impl.dart';
 import 'package:freedom_chat_app/freedom/verify_email/domain/repositories/repo.dart';
 import 'package:freedom_chat_app/freedom/verify_email/domain/use_cases/send_email_verification.dart';
+import 'package:freedom_chat_app/freedom/verify_email/domain/use_cases/sign_out.dart';
 import 'package:get_it/get_it.dart';
 import 'package:github_sign_in/github_sign_in.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -95,6 +96,8 @@ void _setupRepositories() {
 void _setupUseCases() {
   getIt.registerLazySingleton<SendEmailVerificationUseCase>(
       () => SendEmailVerificationUseCase(repo: getIt()));
+  getIt.registerLazySingleton<SignOutUseCase>(
+          () => SignOutUseCase(repo: getIt()));
   getIt
       .registerLazySingleton<SignUpUseCase>(() => SignUpUseCase(repo: getIt()));
   getIt.registerLazySingleton<SignInWithEmailAndPasswordUseCase>(

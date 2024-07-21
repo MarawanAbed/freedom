@@ -38,9 +38,9 @@ class SignUpCubit extends Cubit<SignUpState> {
   Future<void> signUp() async {
     emit(const SignUpState.loading());
     try {
-      var uId=_signUpRepository.getUserId();
+
       final user = UserModel(
-        uId: uId??'',
+        uId: '',
         name: nameController.text.trim(),
         email: emailController.text.trim(),
         password: passwordController.text.trim(),

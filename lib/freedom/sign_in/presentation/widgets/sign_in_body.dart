@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freedom_chat_app/core/helpers/extension.dart';
 import 'package:freedom_chat_app/core/helpers/helper_methods.dart';
 import 'package:freedom_chat_app/core/routes/routes.dart';
 import 'package:freedom_chat_app/core/themes/styles.dart';
@@ -31,7 +33,14 @@ class SignInBody extends StatelessWidget {
               CustomElevatedButton(
                 title: AppStrings.signIn,
                 onPressed: ()async {
-                  await context.read<SignInCubit>().signInWithEmailAndPassword();
+                  final user=FirebaseAuth.instance.currentUser;
+                  if(context.read<SignInCubit>().formKey.currentState!.validate()) {
+                    if(user!=null && !user.emailVerified){
+                      context.pushNamedAndRemoveUntil(Routes.verifyEmailPage, predicate: (route) => false);
+                    }else{
+                      await context.read<SignInCubit>().signInWithEmailAndPassword();
+                    }
+                  }
                 },
               ),
               HelperMethod.verticalSpace(AppSizes.verticalSpacingS30),

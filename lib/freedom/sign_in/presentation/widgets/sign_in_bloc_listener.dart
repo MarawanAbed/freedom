@@ -25,14 +25,14 @@ class SignInBlocListener extends StatelessWidget {
           success: () async {
             Navigator.pop(context);
             HelperMethod.showSuccessToast(
-              AppStrings.loginSuccess,
+              AppStrings.signInSuccess,
               gravity: ToastGravity.BOTTOM,
             );
             // context.pushReplacementNamed(Routes.homeScreen);
           },
           successWithGitHub: () {
             HelperMethod.showSuccessToast(
-              AppStrings.loginSuccess,
+              AppStrings.signInSuccess,
               gravity: ToastGravity.BOTTOM,
             );
             // context.pushReplacementNamed(Routes.homeScreen);

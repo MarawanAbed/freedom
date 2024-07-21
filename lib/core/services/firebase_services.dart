@@ -35,11 +35,9 @@ class AuthService {
         email: email,
         password: password,
       );
-      if (auth.currentUser?.uid == null) {
-        await getIt<DatabaseService>().updateUser({
-          'uId': auth.currentUser!.uid,
-        });
-      }
+      await getIt<DatabaseService>().updateUser({
+        'uId': auth.currentUser!.uid,
+      });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         throw Exception('No user found for that email.');
@@ -116,14 +114,14 @@ class AuthService {
       // Force account selection
       await googleSignIn.signOut(); // Sign out to force account selection
       final GoogleSignInAccount? selectedGoogleUser =
-      await googleSignIn.signIn();
+          await googleSignIn.signIn();
 
       if (selectedGoogleUser == null) {
         throw Exception('Google sign in aborted by user');
       }
 
       final GoogleSignInAuthentication googleAuth =
-      await selectedGoogleUser.authentication;
+          await selectedGoogleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -269,39 +267,18 @@ class AuthService {
     }
   }
 
-  Future<bool> isEmailVerified() async {
-    final user = auth.currentUser!;
-    await user.reload();
-    return user.emailVerified;
+  Future<void> sendEmailVerification() async {
+    await auth.currentUser!.sendEmailVerification();
   }
 
-  Future<void> sendVerificationEmail() async {
-    try {
-      await auth.currentUser!.sendEmailVerification();
-    } on FirebaseAuth catch (e) {
-      if (kDebugMode) {
-        print(e.toString());
-      }
-      throw Exception('Failed to send verification email');
-    }
+
+  Future<void> reloadUser() async {
+    await auth.currentUser!.reload();
   }
 
-  bool userVerified() {
+  bool emailVerified()
+  {
     return auth.currentUser!.emailVerified;
-  }
-
-  Future<void> resendEmailVerification() async {
-    try {
-      final user = auth.currentUser;
-      if (user != null && !user.emailVerified) {
-        await user.sendEmailVerification();
-      }
-    } on FirebaseAuthException catch (e) {
-      if (kDebugMode) {
-        print('Failed to send verification email: $e');
-      }
-      throw Exception('Failed to send verification email');
-    }
   }
 
   Future<void> updateEmailOnly({

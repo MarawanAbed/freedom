@@ -11,6 +11,7 @@ class AppStrings {
   static const String notFound = 'Not Found';
   static const String emailLabel = 'Email:';
   static const String passwordLabel = 'Password:';
+  static const String resendEmail = 'Resend Email';
   static const String noChatsYet = 'No Chats Yet';
   static const String descriptionLabel = 'Description:';
   static const String chats= 'Chats';
@@ -53,9 +54,9 @@ class AppStrings {
   static const String description = 'Enter your description';
   static const String name = 'Enter your name';
 
-  static const String loginSuccess = 'Login Success';
+  static const String signInSuccess = 'SignIn Success';
 
-  static const String registerSuccess = 'Register Success ';
+  static const String signUpSuccess = 'SignUp Success ';
 
   static const String alreadyHaveAccount = 'Already have an account?';
 

@@ -34,8 +34,10 @@ class CompleteYourSignUpBody extends StatelessWidget {
                 onPressed: () async {
                   if (cubit.profileImage != null) {
                     if (cubit.formKey.currentState!.validate()) {
-                      await cubit.uploadImage(context);
-                      await cubit.signUp();
+                       cubit.uploadImage(context).then((_)async
+                       {
+                         await cubit.signUp();
+                       });
                     } else {
                       HelperMethod.showErrorToast('Please fill all fields');
                     }
