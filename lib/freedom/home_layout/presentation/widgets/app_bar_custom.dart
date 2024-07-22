@@ -12,19 +12,14 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        return Future.value(false);
-      },
-      child: AppBar(
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: Padding(
-          padding: EdgeInsets.only(left:AppSizes.kDefaultAllPaddingS10),
-          child: Text(
-            title,
-            style: TextStyles.font22Bold,
-          ),
+    return AppBar(
+      elevation: 0,
+      automaticallyImplyLeading: false,
+      title: Padding(
+        padding: EdgeInsets.only(left:AppSizes.kDefaultAllPaddingS10),
+        child: Text(
+          title,
+          style: TextStyles.font22Bold,
         ),
       ),
     );

@@ -11,11 +11,19 @@ import 'package:freedom_chat_app/freedom/chat/domain/use_cases/send_message.dart
 import 'package:freedom_chat_app/freedom/chat/presentation/bloc/get_all_messages_cubit.dart';
 import 'package:freedom_chat_app/freedom/chat/presentation/bloc/send_messages_cubit.dart';
 import 'package:freedom_chat_app/freedom/edit_profile/domain/use_cases/update_profile.dart';
+import 'package:freedom_chat_app/freedom/forget_password/data/data_sources/remote_data_Source.dart';
+import 'package:freedom_chat_app/freedom/forget_password/data/repositories/repo_impl.dart';
+import 'package:freedom_chat_app/freedom/forget_password/domain/repositories/repo.dart';
+import 'package:freedom_chat_app/freedom/forget_password/domain/use_cases/forget_password.dart';
+import 'package:freedom_chat_app/freedom/forget_password/presentation/bloc/forget_password_cubit.dart';
 import 'package:freedom_chat_app/freedom/home/data/data_sources/remote_data_source.dart';
 import 'package:freedom_chat_app/freedom/home/data/repositories/repo_impl.dart';
 import 'package:freedom_chat_app/freedom/home/domain/repositories/repo.dart';
 import 'package:freedom_chat_app/freedom/home/domain/use_case/update_user.dart';
 import 'package:freedom_chat_app/freedom/home/presentation/bloc/home_cubit.dart';
+import 'package:freedom_chat_app/freedom/home_layout/data/data_source/remote_data_source.dart';
+import 'package:freedom_chat_app/freedom/home_layout/data/repo/repo_impl.dart';
+import 'package:freedom_chat_app/freedom/home_layout/domain/repo/repo.dart';
 import 'package:freedom_chat_app/freedom/profile/data/data_sources/remote_data_source.dart';
 import 'package:freedom_chat_app/freedom/profile/data/repositories/repo_impl.dart';
 import 'package:freedom_chat_app/freedom/profile/domain/repositories/repo.dart';
@@ -74,6 +82,8 @@ void _setupDataSources() {
   //     ));
   getIt.registerLazySingleton<SignInRemoteDataSource>(
       () => SignInRemoteDataSourceImpl(authService: getIt()));
+  getIt.registerLazySingleton<ForgetPasswordRemoteDataSource>(
+      () => ForgetPasswordRemoteDataSourceImpl(auth: getIt()));
   getIt.registerLazySingleton<VerifyRemoteDataSource>(
       () => VerifyRemoteDataSourceImpl(authService: getIt()));
   getIt.registerLazySingleton<SignUpRemoteDataSource>(
@@ -83,9 +93,11 @@ void _setupDataSources() {
             databaseService: getIt(),
           ));
   getIt.registerLazySingleton<HomeRemoteDataSource>(
-          () => HomeRemoteDataSourceImpl(service: getIt()));
+      () => HomeRemoteDataSourceImpl(service: getIt(), authService: getIt()));
   getIt.registerLazySingleton<ProfileRemoteDataSource>(
-          () => ProfileRemoteDataSourceImpl(profileService: getIt()));
+      () => ProfileRemoteDataSourceImpl(profileService: getIt()));
+  getIt.registerLazySingleton<HomeLayoutRemoteDataSource>(
+      () => HomeLayoutRemoteDataSourceImpl(auth: getIt()));
   // getIt.registerLazySingleton<ChatRemoteDataSource>(
   //       () => ChatRemoteDataSourceImpl(getIt(), getIt(), getIt()),
   // );
@@ -94,24 +106,29 @@ void _setupDataSources() {
 void _setupRepositories() {
   getIt.registerLazySingleton<SignInRepo>(
       () => SignInRepoImpl(signInRemoteDataSource: getIt()));
-  getIt.registerLazySingleton<HomeRepo>(() => HomeRepoImpl(homeDataSource: getIt()));
-  // getIt.registerLazySingleton<LoginInRepo>(() => LoginRepoImpl(getIt()));
+  getIt.registerLazySingleton<HomeRepo>(
+      () => HomeRepoImpl(homeDataSource: getIt()));
+  getIt.registerLazySingleton<ForgetPasswordRepo>(
+      () => ForgetPasswordRepoImpl(dataSource: getIt()));
   getIt.registerLazySingleton<SignUpRepository>(
       () => SignUpRepositoryImpl(repo: getIt()));
-  // getIt.registerLazySingleton<ForgetRepo>(() => ForgetRepoImpl(getIt()));
+  getIt
+      .registerLazySingleton<HomeLayoutRepo>(() => HomeLayoutRepoImpl(getIt()));
   getIt.registerLazySingleton<VerifyRepository>(
       () => VerifyRepoImpl(verifyDataSource: getIt()));
   getIt.registerLazySingleton<ProfileRepo>(
-          () => ProfileRepoImpl(profileDataSource: getIt()));
+      () => ProfileRepoImpl(profileDataSource: getIt()));
 }
 
 void _setupUseCases() {
   getIt.registerLazySingleton<SendEmailVerificationUseCase>(
       () => SendEmailVerificationUseCase(repo: getIt()));
   getIt.registerLazySingleton<UpdateUserUseCase>(
-          () => UpdateUserUseCase(repo: getIt()));
+      () => UpdateUserUseCase(repo: getIt()));
   getIt.registerLazySingleton<SignOutUseCase>(
-          () => SignOutUseCase(repo: getIt()));
+      () => SignOutUseCase(repo: getIt()));
+  getIt.registerLazySingleton<ForgetPasswordUseCase>(
+      () => ForgetPasswordUseCase(repo: getIt()));
   getIt
       .registerLazySingleton<SignUpUseCase>(() => SignUpUseCase(repo: getIt()));
   getIt.registerLazySingleton<SignInWithEmailAndPasswordUseCase>(
@@ -144,6 +161,11 @@ void _setupCubits() {
   );
   getIt.registerFactory<GetAllMessagesCubit>(
     () => GetAllMessagesCubit(),
+  );
+  getIt.registerFactory<ForgetPasswordCubit>(
+    () => ForgetPasswordCubit(
+      getIt(),
+    ),
   );
   // getIt.registerFactory<UpdateUserCubit>(
   //   () => UpdateUserCubit(

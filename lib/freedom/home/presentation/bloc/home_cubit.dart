@@ -26,4 +26,9 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+
+  String? getUserId()
+  {
+   return _homeRepo.getUid();
+  }
 }

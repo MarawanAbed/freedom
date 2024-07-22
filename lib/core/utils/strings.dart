@@ -31,7 +31,7 @@ class AppStrings {
   static const String verifyEmail =
       'A verification email has been sent to. Please verify your email to continue.';
   static const String send = 'Send';
-  static const String checkYourEmail = 'Check your email';
+  static const String checkYourEmail = 'A password reset link has been sent to your email';
   static const String enterEmail =
       'Enter your email address and we will send you a link to reset your password.';
   static String onBoardingKey = 'onBoardingKey';

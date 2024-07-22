@@ -21,6 +21,10 @@ class TextNavigate extends StatelessWidget {
         RichText(
           text: TextSpan(
             text: title,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                context.pushNamed(route);
+              },
             style: TextStyles.font16NormalGrey.copyWith(
               color:
                   subTitle == null ? AppColors.kPrimaryColorWithOpacity : null,

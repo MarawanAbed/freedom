@@ -31,4 +31,16 @@ class HomeRepoImpl extends HomeRepo
       throw e;
     }
   }
+
+  @override
+  String? getUid() {
+    try
+    {
+      return homeDataSource.getUid();
+    }
+    catch(e)
+    {
+      throw e;
+    }
+  }
 }

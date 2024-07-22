@@ -83,11 +83,10 @@ class AuthService {
 
   Future<void> signOut() async {
     try {
-      // await getIt<DatabaseService>().updateUser({
-      //   'lastActive': DateTime.now(),
-      //   'uId': auth.currentUser!.uid,
-      //   'isOnline': false,
-      // });
+      await getIt<DatabaseService>().updateUser({
+        'lastActive': DateTime.now(),
+        'isOnline': false,
+      });
       await auth.signOut();
     } on FirebaseAuth catch (e) {
       if (kDebugMode) {

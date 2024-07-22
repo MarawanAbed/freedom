@@ -5,6 +5,8 @@ import 'package:freedom_chat_app/core/routes/routes.dart';
 import 'package:freedom_chat_app/freedom/auth/presentation/pages/auth_page.dart';
 import 'package:freedom_chat_app/freedom/chat/presentation/pages/chat_page.dart';
 import 'package:freedom_chat_app/freedom/edit_profile/presentation/pages/edit_profile_page.dart';
+import 'package:freedom_chat_app/freedom/forget_password/presentation/bloc/forget_password_cubit.dart';
+import 'package:freedom_chat_app/freedom/forget_password/presentation/pages/forget_password_page.dart';
 import 'package:freedom_chat_app/freedom/home/presentation/bloc/home_cubit.dart';
 import 'package:freedom_chat_app/freedom/home_layout/presentation/pages/home_layout.dart';
 import 'package:freedom_chat_app/freedom/onBoarding/presentation/pages/on_boarding_page.dart';
@@ -23,6 +25,10 @@ class AppRoutes {
     Routes.signInPage: (context) => BlocProvider(
           create: (context) => getIt<SignInCubit>(),
           child: const SignInPage(),
+        ),
+    Routes.forgotPasswordPage: (context) => BlocProvider(
+          create: (context) => getIt<ForgetPasswordCubit>(),
+          child: const ForgetPasswordPage(),
         ),
     Routes.signUpPage: (context) => const SignUpPage(),
     Routes.completeYourSignUpPage: (context) => const CompleteYourSignUpPage(),
