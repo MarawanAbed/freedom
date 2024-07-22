@@ -17,18 +17,39 @@ class BuildRowInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        HelperMethod.verticalSpace(AppSizes.verticalSpacingS20),
-         Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-             const Text(
-              AppStrings.email,
+            const Text(
+              AppStrings.nameLabel,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
             Text(
-             user.email! ,
+              user.name!,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        const Divider(
+          thickness: 1,
+          color: Colors.grey,
+        ),
+        HelperMethod.verticalSpace(AppSizes.verticalSpacingS20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              AppStrings.emailLabel,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              user.email!,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -41,10 +62,10 @@ class BuildRowInfo extends StatelessWidget {
           color: Colors.grey,
         ),
         HelperMethod.verticalSpace(AppSizes.verticalSpacingS20),
-         Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-             const Text(
+            const Text(
               AppStrings.descriptionLabel,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -64,7 +85,7 @@ class BuildRowInfo extends StatelessWidget {
           color: Colors.grey,
         ),
         HelperMethod.verticalSpace(AppSizes.verticalSpacingS20),
-         Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text(
@@ -87,10 +108,10 @@ class BuildRowInfo extends StatelessWidget {
           color: Colors.grey,
         ),
         HelperMethod.verticalSpace(AppSizes.verticalSpacingS20),
-         Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-             const Text(
+            const Text(
               AppStrings.passwordLabel,
               style: TextStyle(
                 fontWeight: FontWeight.bold,

@@ -36,9 +36,7 @@ class SignInBody extends StatelessWidget {
                       .formKey
                       .currentState!
                       .validate()) {
-                    await context
-                        .read<SignInCubit>()
-                        .signInWithEmailAndPassword();
+                    context.read<SignInCubit>().signInWithEmailAndPassword();
                   }
                 },
               ),

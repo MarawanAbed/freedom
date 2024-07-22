@@ -14,9 +14,15 @@ class GetUserCubit extends Cubit<GetUserState> {
   void getUser() {
     emit(const GetUserState.loading());
     _profileRepo.getUser().listen((user) {
-      emit(GetUserState.success(user));
+      if(!isClosed)
+      {
+        emit(GetUserState.success(user));
+      }
     }, onError: (e) {
-      emit(GetUserState.error(e.toString()));
+      if(!isClosed)
+      {
+        emit(GetUserState.error(e.toString()));
+      }
     });
   }
 }

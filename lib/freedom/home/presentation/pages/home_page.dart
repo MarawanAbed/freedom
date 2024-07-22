@@ -10,8 +10,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
-
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     getIt<UpdateUserUseCase>().call({
@@ -43,6 +42,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return const HomeBody();

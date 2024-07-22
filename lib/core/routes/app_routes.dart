@@ -4,6 +4,7 @@ import 'package:freedom_chat_app/core/di/dependancy_injection.dart';
 import 'package:freedom_chat_app/core/routes/routes.dart';
 import 'package:freedom_chat_app/freedom/auth/presentation/pages/auth_page.dart';
 import 'package:freedom_chat_app/freedom/chat/presentation/pages/chat_page.dart';
+import 'package:freedom_chat_app/freedom/edit_profile/presentation/bloc/update_profile_cubit.dart';
 import 'package:freedom_chat_app/freedom/edit_profile/presentation/pages/edit_profile_page.dart';
 import 'package:freedom_chat_app/freedom/forget_password/presentation/bloc/forget_password_cubit.dart';
 import 'package:freedom_chat_app/freedom/forget_password/presentation/pages/forget_password_page.dart';
@@ -46,6 +47,9 @@ class AppRoutes {
         ),
     Routes.chatPage: (context) => const ChatPage(),
     Routes.searchPage: (context) => const SearchPage(),
-    Routes.editProfilePage: (context) => const EditProfilePage(),
+    Routes.editProfilePage: (context) => BlocProvider(
+          create: (context) => getIt<UpdateProfileCubit>(),
+          child: const EditProfilePage(),
+        ),
   };
 }

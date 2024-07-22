@@ -19,10 +19,16 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       final Stream<List<UserModel>> users = _homeRepo.getAllUsers();
       users.listen((event) {
-        emit(HomeState.success(event));
+        if(!isClosed)
+        {
+          emit(HomeState.success(event));
+        }
       });
     } catch (e) {
-      emit(HomeState.error(e.toString()));
+      if(!isClosed)
+      {
+        emit(HomeState.error(e.toString()));
+      }
     }
   }
 

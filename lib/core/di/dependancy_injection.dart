@@ -10,7 +10,11 @@ import 'package:freedom_chat_app/core/utils/app_secured.dart';
 import 'package:freedom_chat_app/freedom/chat/domain/use_cases/send_message.dart';
 import 'package:freedom_chat_app/freedom/chat/presentation/bloc/get_all_messages_cubit.dart';
 import 'package:freedom_chat_app/freedom/chat/presentation/bloc/send_messages_cubit.dart';
+import 'package:freedom_chat_app/freedom/edit_profile/data/data_sources/remote_data_source.dart';
+import 'package:freedom_chat_app/freedom/edit_profile/data/repositories/repo_impl.dart';
+import 'package:freedom_chat_app/freedom/edit_profile/domain/repositories/repo.dart';
 import 'package:freedom_chat_app/freedom/edit_profile/domain/use_cases/update_profile.dart';
+import 'package:freedom_chat_app/freedom/edit_profile/presentation/bloc/update_profile_cubit.dart';
 import 'package:freedom_chat_app/freedom/forget_password/data/data_sources/remote_data_Source.dart';
 import 'package:freedom_chat_app/freedom/forget_password/data/repositories/repo_impl.dart';
 import 'package:freedom_chat_app/freedom/forget_password/domain/repositories/repo.dart';
@@ -98,6 +102,8 @@ void _setupDataSources() {
       () => ProfileRemoteDataSourceImpl(profileService: getIt()));
   getIt.registerLazySingleton<HomeLayoutRemoteDataSource>(
       () => HomeLayoutRemoteDataSourceImpl(auth: getIt()));
+  getIt.registerLazySingleton<EditProfileRemoteDataSource>(
+          () => EditProfileRemoteDataSourceImpl(service: getIt(), storageService: getIt()));
   // getIt.registerLazySingleton<ChatRemoteDataSource>(
   //       () => ChatRemoteDataSourceImpl(getIt(), getIt(), getIt()),
   // );
@@ -118,6 +124,8 @@ void _setupRepositories() {
       () => VerifyRepoImpl(verifyDataSource: getIt()));
   getIt.registerLazySingleton<ProfileRepo>(
       () => ProfileRepoImpl(profileDataSource: getIt()));
+  getIt.registerLazySingleton<EditProfileRepo>(
+          () => EditProfileRepositoryImpl(dataSource: getIt()));
 }
 
 void _setupUseCases() {
@@ -184,6 +192,12 @@ void _setupCubits() {
     () => GetUserCubit(
       getIt(),
     ),
+  );
+  getIt.registerFactory<UpdateProfileCubit>(
+        () => UpdateProfileCubit(
+      getIt(),
+      getIt(),
+        ),
   );
   getIt.registerFactory<SignUpCubit>(() => SignUpCubit(
         getIt(),

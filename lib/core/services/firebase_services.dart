@@ -83,12 +83,17 @@ class AuthService {
 
   Future<void> signOut() async {
     try {
-      await getIt<DatabaseService>().updateUser({
-        'lastActive': DateTime.now(),
-        'isOnline': false,
-      });
-      await auth.signOut();
-    } on FirebaseAuth catch (e) {
+      if (auth.currentUser != null) {
+        await getIt<DatabaseService>().updateUser({
+          'lastActive': DateTime.now(),
+          'uId': auth.currentUser!.uid,
+          'isOnline': false,
+        });
+        await auth.signOut();
+      } else {
+        print('No user is currently signed in.');
+      }
+    } on FirebaseAuthException catch (e) {
       if (kDebugMode) {
         print(e.toString());
       }
@@ -280,13 +285,38 @@ class AuthService {
     return auth.currentUser!.emailVerified;
   }
 
+  Future<void> updateEmailAndPassword({
+    required String newEmail,
+    required String newPassword,
+    required String oldPassword,
+  }) async {
+    try {
+      final user = auth.currentUser;
+      if (user == null) {
+        print('No user is currently signed in.');
+        return;
+      }
+      // Reauthenticate the user with the old password
+      final userCredential = await user.reauthenticateWithCredential(
+        EmailAuthProvider.credential(
+          email: user.email!,
+          password: oldPassword,
+        ),
+      );
+      // Update email
+      await userCredential.user?.verifyBeforeUpdateEmail(newEmail);
+      // Update password
+      await userCredential.user?.updatePassword(newPassword);
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
   Future<void> updateEmailOnly({
     required String newEmail,
     required String password,
   }) async {
     try {
       final user = auth.currentUser;
-      // Reauthenticate the user with the old password
       final userCredential = await user?.reauthenticateWithCredential(
         EmailAuthProvider.credential(
           email: user.email!,

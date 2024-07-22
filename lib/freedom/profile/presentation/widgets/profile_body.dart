@@ -19,27 +19,29 @@ class ProfileBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(AppSizes.kDefaultAllPaddingS20),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ProfileHeader(user: user),
-            HelperMethod.verticalSpace(AppSizes.verticalSpacingS30),
-            BuildRowInfo(user: user),
-            HelperMethod.verticalSpace(AppSizes.verticalSpacingS30),
-            CustomElevatedButton(
-              onPressed: () {
-                if(user.source=='local')
-                {
-                  context.pushNamed(Routes.editProfilePage, arguments: user);
-                }else
-                {
-                  HelperMethod.showErrorToast('You cant Edit Profile from ${user.source} account');
-                }
-              },
-              title: AppStrings.editProfile,
-            ),
-          ],
+      child: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ProfileHeader(user: user),
+              HelperMethod.verticalSpace(AppSizes.verticalSpacingS30),
+              BuildRowInfo(user: user),
+              HelperMethod.verticalSpace(AppSizes.verticalSpacingS30),
+              CustomElevatedButton(
+                onPressed: () {
+                  if(user.source=='local')
+                  {
+                    context.pushNamed(Routes.editProfilePage, arguments: user);
+                  }else
+                  {
+                    HelperMethod.showErrorToast('You cant Edit Profile from ${user.source} account');
+                  }
+                },
+                title: AppStrings.editProfile,
+              ),
+            ],
+          ),
         ),
       ),
     );

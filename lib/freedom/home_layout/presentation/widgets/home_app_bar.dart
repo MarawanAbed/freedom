@@ -35,7 +35,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         HelperMethod.horizontalSpace(AppSizes.horizontalSpacingS15),
         IconButton(
           onPressed: () {
-            getIt<HomeLayoutRepo>().logout().then((_){
+            getIt<HomeLayoutRepo>().logout().then((_) {
               context.pushNamedAndRemoveUntil(Routes.authPage,
                   predicate: (route) => false);
             });

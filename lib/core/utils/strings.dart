@@ -14,6 +14,7 @@ class AppStrings {
   static const String resendEmail = 'Resend Email';
   static const String noChatsYet = 'No Chats Yet';
   static const String descriptionLabel = 'Description:';
+  static const String nameLabel = 'Name:';
   static const String chats= 'Chats';
   static const String profile= 'Profile';
   static const String address='Enter your address';

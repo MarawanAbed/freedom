@@ -1,42 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freedom_chat_app/core/themes/styles.dart';
 import 'package:freedom_chat_app/core/utils/sizes.dart';
 import 'package:freedom_chat_app/core/utils/strings.dart';
+import 'package:freedom_chat_app/freedom/edit_profile/presentation/bloc/update_profile_cubit.dart';
 
 
 import '../../../../core/helpers/helper_methods.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/widgets/app_text_form.dart';
+import '../../../sign_up/data/models/user_model.dart';
 
 class EdtProfileTextForm extends StatefulWidget {
-  const EdtProfileTextForm({super.key, });
+  const EdtProfileTextForm({super.key, required this.user, });
 
-
+  final UserModel user;
   @override
   State<EdtProfileTextForm> createState() => _EdtProfileTextFormState();
 }
 
 class _EdtProfileTextFormState extends State<EdtProfileTextForm> {
-  late TextEditingController nameController;
 
-  late TextEditingController emailController;
-
-  late TextEditingController passwordController;
-
-  late TextEditingController descriptionController;
 
   @override
   void initState() {
-    // var cubit = UpdateUserCubit.get(context);
-    // nameController = cubit.nameController;
-    // emailController = cubit.emailController;
-    // passwordController = cubit.passwordController;
-    // descriptionController = cubit.descriptionController;
-    nameController = TextEditingController();
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
-    descriptionController = TextEditingController();
-
+    var cubit=context.read<UpdateProfileCubit>();
+    cubit.emailController=TextEditingController(text: widget.user.email);
+    cubit.nameController=TextEditingController(text: widget.user.name);
+    cubit.descriptionController=TextEditingController(text: widget.user.description);
+    cubit.passwordController=TextEditingController(text: widget.user.password);
+    cubit.addressController=TextEditingController(text: widget.user.address);
     super.initState();
   }
 
@@ -45,11 +38,12 @@ class _EdtProfileTextFormState extends State<EdtProfileTextForm> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).brightness == Brightness.dark;
+    var cubit=context.read<UpdateProfileCubit>();
     return Column(
       children: [
         //nameController..text = widget.user.name!
         AppTextFormField(
-          controller: nameController,
+          controller: cubit.nameController,
           hintText: AppStrings.name,
           inputTextStyle: _inputColor(theme),
           backgroundColor: theme ? AppColors.kField2 : Colors.white,
@@ -57,7 +51,7 @@ class _EdtProfileTextFormState extends State<EdtProfileTextForm> {
         ),
         HelperMethod.verticalSpace(AppSizes.verticalSpacingS20),
         AppTextFormField(
-          controller: descriptionController,
+          controller:cubit.descriptionController,
           hintText: AppStrings.description,
           inputTextStyle: _inputColor(theme),
           backgroundColor: theme ? AppColors.kField2 : Colors.white,
@@ -65,7 +59,7 @@ class _EdtProfileTextFormState extends State<EdtProfileTextForm> {
         ),
         HelperMethod.verticalSpace(AppSizes.verticalSpacingS20),
         AppTextFormField(
-          controller:emailController,
+          controller:cubit.emailController,
           hintText: AppStrings.email,
           inputTextStyle: _inputColor(theme),
           backgroundColor: theme ? AppColors.kField2 : Colors.white,
@@ -73,7 +67,15 @@ class _EdtProfileTextFormState extends State<EdtProfileTextForm> {
         ),
         HelperMethod.verticalSpace(AppSizes.verticalSpacingS20),
         AppTextFormField(
-          controller: passwordController,
+          controller:cubit.addressController,
+          hintText: AppStrings.address,
+          inputTextStyle: _inputColor(theme),
+          backgroundColor: theme ? AppColors.kField2 : Colors.white,
+          hintStyle: _hintStyle(theme),
+        ),
+        HelperMethod.verticalSpace(AppSizes.verticalSpacingS20),
+        AppTextFormField(
+          controller: cubit.passwordController,
           hintText: AppStrings.password,
           inputTextStyle: _inputColor(theme),
           backgroundColor: theme ? AppColors.kField2 : Colors.white,
