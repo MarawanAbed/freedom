@@ -36,13 +36,6 @@ class EditProfileBody extends StatelessWidget {
               },
             ),
             HelperMethod.verticalSpace(AppSizes.verticalSpacingS10),
-            Text(
-              AppStrings.note,
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .bodySmall,
-            ),
             const EditProfileBlocListener(),
           ],
         ),
@@ -65,6 +58,7 @@ class EditProfileBody extends StatelessWidget {
       source: user.source,
     );
 
+    // Step 1: Update profile image if needed
     if (cubit.profileImage != null && cubit.profileImage!.path != user.image) {
       cubit.imageUrl = await cubit.uploadImage(context);
       final users = UserModel(
@@ -79,65 +73,68 @@ class EditProfileBody extends StatelessWidget {
         lastActive: user.lastActive,
         source: user.source,
       );
-      await cubit.updateProfile(users);
+      await cubit.updateProfile(users).then((_) {
+        context.pop();
+      });
     }
 
-    if (newUser.email != user.email) {
+    // Step 2: Update email and/or password
+    if (newUser.email != user.email && newUser.password != user.password) {
       await cubit
-          .updateEmailOnly(
-          newEmail: newUser.email!,
-          password: user.password!,
-          context: context)
-          .then((value) async {
+          .updateEmailAndPassword(
+        newEmail: newUser.email!,
+        newPassword: newUser.password!,
+        oldPassword: user.password!,
+      )
+          .then((_) async {
         await cubit.updateProfile(newUser);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             duration: Duration(seconds: 5),
             backgroundColor: Colors.green,
-            content:
-            Text('Check your new Email to verify your new Email address'),
+            content: Text('Check your new Email to verify your new Email address'),
           ),
         );
         Navigator.pushNamedAndRemoveUntil(
             context, Routes.signInPage, (route) => false);
       });
-    }
-    if (newUser.password != user.password && newUser.email != user.email) {
-      cubit.updateEmailAndPassword(newEmail: newUser.email!,
-          newPassword: newUser.password!,
-          oldPassword: user.password!).then((_)
-      {
-        cubit.updateProfile(newUser).then((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              duration: Duration(seconds: 5),
-              backgroundColor: Colors.green,
-              content:
-              Text('Check your new Email to verify your new Email address'),
-            ),
-          );
-          Navigator.pushNamedAndRemoveUntil(
-              context, Routes.signInPage, (route) => false);
-        });
+    } else if (newUser.email != user.email) {
+      await cubit
+          .updateEmailOnly(
+        newEmail: newUser.email!,
+        password: user.password!,
+        context: context,
+      )
+          .then((_) async {
+        await cubit.updateProfile(newUser);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            duration: Duration(seconds: 5),
+            backgroundColor: Colors.green,
+            content: Text('Check your new Email to verify your new Email address'),
+          ),
+        );
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.signInPage, (route) => false);
       });
-    }
-    if (newUser.password != user.password) {
+    } else if (newUser.password != user.password) {
       await cubit
           .updatePasswordOnly(
         newPassword: newUser.password!,
         oldPassword: user.password!,
         email: newUser.email!,
-      ).then((value) {
-        cubit.updateProfile(newUser).then((_) {
-          context.pop();
-        });
+      )
+          .then((_) async {
+        await cubit.updateProfile(newUser);
+        context.pop();
       });
     }
 
+    // Step 3: Update other profile information
     if (newUser.name != user.name ||
         newUser.description != user.description ||
         newUser.address != user.address) {
-      cubit.updateProfile(newUser).then((_) {
+      await cubit.updateProfile(newUser).then((_) {
         context.pop();
       });
     }
