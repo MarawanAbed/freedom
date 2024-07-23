@@ -32,7 +32,11 @@ import 'package:freedom_chat_app/freedom/profile/data/data_sources/remote_data_s
 import 'package:freedom_chat_app/freedom/profile/data/repositories/repo_impl.dart';
 import 'package:freedom_chat_app/freedom/profile/domain/repositories/repo.dart';
 import 'package:freedom_chat_app/freedom/profile/presentation/bloc/get_user_cubit.dart';
+import 'package:freedom_chat_app/freedom/search/data/data_sources/remote_data_source.dart';
+import 'package:freedom_chat_app/freedom/search/data/repositories/repo_impl.dart';
+import 'package:freedom_chat_app/freedom/search/domain/repositories/repo.dart';
 import 'package:freedom_chat_app/freedom/search/domain/use_cases/search_users.dart';
+import 'package:freedom_chat_app/freedom/search/presentation/bloc/search_users_cubit.dart';
 import 'package:freedom_chat_app/freedom/sign_in/data/data_sources/remote_data_source.dart';
 import 'package:freedom_chat_app/freedom/sign_in/data/repositories/repo_impl.dart';
 import 'package:freedom_chat_app/freedom/sign_in/domain/repositories/repo.dart';
@@ -104,9 +108,9 @@ void _setupDataSources() {
       () => HomeLayoutRemoteDataSourceImpl(auth: getIt()));
   getIt.registerLazySingleton<EditProfileRemoteDataSource>(
           () => EditProfileRemoteDataSourceImpl(service: getIt(), storageService: getIt()));
-  // getIt.registerLazySingleton<ChatRemoteDataSource>(
-  //       () => ChatRemoteDataSourceImpl(getIt(), getIt(), getIt()),
-  // );
+  getIt.registerLazySingleton<SearchRemoteDataSource>(
+        () => SearchRemoteDataSourceImpl(searchService:getIt()),
+  );
 }
 
 void _setupRepositories() {
@@ -118,6 +122,8 @@ void _setupRepositories() {
       () => ForgetPasswordRepoImpl(dataSource: getIt()));
   getIt.registerLazySingleton<SignUpRepository>(
       () => SignUpRepositoryImpl(repo: getIt()));
+  getIt.registerLazySingleton<SearchRepo>(
+          () => SearchRepositoryImpl(searchDataSource: getIt()));
   getIt
       .registerLazySingleton<HomeLayoutRepo>(() => HomeLayoutRepoImpl(getIt()));
   getIt.registerLazySingleton<VerifyRepository>(
@@ -203,11 +209,11 @@ void _setupCubits() {
         getIt(),
         getIt(),
       ));
-  // getIt.registerFactory<ForgetPasswordCubit>(
-  //   () => ForgetPasswordCubit(
-  //     getIt(),
-  //   ),
-  // );
+  getIt.registerFactory<SearchUsersCubit>(
+    () => SearchUsersCubit(
+      getIt(),
+    ),
+  );
   //
   // getIt.registerFactory<VerifyEmailCubit>(
   //   () => VerifyEmailCubit(

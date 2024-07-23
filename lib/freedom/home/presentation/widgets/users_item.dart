@@ -39,7 +39,7 @@ class _UserItemsState extends State<UserItems> {
           user: widget.user,
         ),
         title: Text(
-          userId == widget.user.uId ? 'You' : widget.user.name!,
+           userId==widget.user.uId?'You (${widget.user.name})':widget.user.name!,
           style: TextStyles.font18Normal,
         ),
         contentPadding: EdgeInsets.all(AppSizes.kDefaultAllPaddingS10),

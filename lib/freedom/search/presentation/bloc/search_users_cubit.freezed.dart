@@ -19,21 +19,21 @@ mixin _$SearchUsersState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function() success,
+    required TResult Function(List<UserModel> users) success,
     required TResult Function(String message) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
-    TResult? Function()? success,
+    TResult? Function(List<UserModel> users)? success,
     TResult? Function(String message)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function()? success,
+    TResult Function(List<UserModel> users)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) =>
@@ -119,7 +119,7 @@ class _$InitialImpl implements _Initial {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function() success,
+    required TResult Function(List<UserModel> users) success,
     required TResult Function(String message) error,
   }) {
     return initial();
@@ -129,7 +129,7 @@ class _$InitialImpl implements _Initial {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
-    TResult? Function()? success,
+    TResult? Function(List<UserModel> users)? success,
     TResult? Function(String message)? error,
   }) {
     return initial?.call();
@@ -139,7 +139,7 @@ class _$InitialImpl implements _Initial {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function()? success,
+    TResult Function(List<UserModel> users)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -193,6 +193,8 @@ abstract class _$$SuccessImplCopyWith<$Res> {
   factory _$$SuccessImplCopyWith(
           _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
       __$$SuccessImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<UserModel> users});
 }
 
 /// @nodoc
@@ -202,57 +204,87 @@ class __$$SuccessImplCopyWithImpl<$Res>
   __$$SuccessImplCopyWithImpl(
       _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? users = null,
+  }) {
+    return _then(_$SuccessImpl(
+      null == users
+          ? _value._users
+          : users // ignore: cast_nullable_to_non_nullable
+              as List<UserModel>,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$SuccessImpl implements Success {
-  const _$SuccessImpl();
+  const _$SuccessImpl(final List<UserModel> users) : _users = users;
+
+  final List<UserModel> _users;
+  @override
+  List<UserModel> get users {
+    if (_users is EqualUnmodifiableListView) return _users;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_users);
+  }
 
   @override
   String toString() {
-    return 'SearchUsersState.success()';
+    return 'SearchUsersState.success(users: $users)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$SuccessImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$SuccessImpl &&
+            const DeepCollectionEquality().equals(other._users, _users));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_users));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
+      __$$SuccessImplCopyWithImpl<_$SuccessImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function() success,
+    required TResult Function(List<UserModel> users) success,
     required TResult Function(String message) error,
   }) {
-    return success();
+    return success(users);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
-    TResult? Function()? success,
+    TResult? Function(List<UserModel> users)? success,
     TResult? Function(String message)? error,
   }) {
-    return success?.call();
+    return success?.call(users);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function()? success,
+    TResult Function(List<UserModel> users)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if (success != null) {
-      return success();
+      return success(users);
     }
     return orElse();
   }
@@ -293,7 +325,12 @@ class _$SuccessImpl implements Success {
 }
 
 abstract class Success implements SearchUsersState {
-  const factory Success() = _$SuccessImpl;
+  const factory Success(final List<UserModel> users) = _$SuccessImpl;
+
+  List<UserModel> get users;
+  @JsonKey(ignore: true)
+  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -361,7 +398,7 @@ class _$ErrorImpl implements Error {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function() success,
+    required TResult Function(List<UserModel> users) success,
     required TResult Function(String message) error,
   }) {
     return error(message);
@@ -371,7 +408,7 @@ class _$ErrorImpl implements Error {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
-    TResult? Function()? success,
+    TResult? Function(List<UserModel> users)? success,
     TResult? Function(String message)? error,
   }) {
     return error?.call(message);
@@ -381,7 +418,7 @@ class _$ErrorImpl implements Error {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function()? success,
+    TResult Function(List<UserModel> users)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {

@@ -18,14 +18,14 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Padding(
         padding: EdgeInsets.only(left: AppSizes.kDefaultAllPaddingS10),
         child: Text(
-          'Chats',
+          'Freedom',
           style: TextStyles.font22Bold,
         ),
       ),
       actions: [
         IconButton(
           onPressed: () {
-            // context.pushNamed(Routes.searchScreen);
+            context.pushNamed(Routes.searchPage);
           },
           icon: Icon(
             Icons.search,

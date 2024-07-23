@@ -113,8 +113,7 @@ class AuthService {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
         // Handle cancellation here
-        print('Google sign-in was cancelled by the user');
-        return; // Early return to stop further execution
+        throw('Google sign-in was cancelled by the user');
       }
 
       // Force account selection

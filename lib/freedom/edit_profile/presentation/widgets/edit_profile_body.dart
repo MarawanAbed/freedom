@@ -58,7 +58,6 @@ class EditProfileBody extends StatelessWidget {
       source: user.source,
     );
 
-    // Step 1: Update profile image if needed
     if (cubit.profileImage != null && cubit.profileImage!.path != user.image) {
       cubit.imageUrl = await cubit.uploadImage(context);
       final users = UserModel(
@@ -78,7 +77,6 @@ class EditProfileBody extends StatelessWidget {
       });
     }
 
-    // Step 2: Update email and/or password
     if (newUser.email != user.email && newUser.password != user.password) {
       await cubit
           .updateEmailAndPassword(
@@ -130,7 +128,6 @@ class EditProfileBody extends StatelessWidget {
       });
     }
 
-    // Step 3: Update other profile information
     if (newUser.name != user.name ||
         newUser.description != user.description ||
         newUser.address != user.address) {

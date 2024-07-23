@@ -12,6 +12,7 @@ import 'package:freedom_chat_app/freedom/home/presentation/bloc/home_cubit.dart'
 import 'package:freedom_chat_app/freedom/home_layout/presentation/pages/home_layout.dart';
 import 'package:freedom_chat_app/freedom/onBoarding/presentation/pages/on_boarding_page.dart';
 import 'package:freedom_chat_app/freedom/profile/presentation/bloc/get_user_cubit.dart';
+import 'package:freedom_chat_app/freedom/search/presentation/bloc/search_users_cubit.dart';
 import 'package:freedom_chat_app/freedom/search/presentation/pages/search_page.dart';
 import 'package:freedom_chat_app/freedom/sign_in/presentation/bloc/sign_in_cubit.dart';
 import 'package:freedom_chat_app/freedom/sign_in/presentation/pages/sign_in_page.dart';
@@ -46,10 +47,13 @@ class AppRoutes {
           child: const HomeLayout(),
         ),
     Routes.chatPage: (context) => const ChatPage(),
-    Routes.searchPage: (context) => const SearchPage(),
     Routes.editProfilePage: (context) => BlocProvider(
           create: (context) => getIt<UpdateProfileCubit>(),
           child: const EditProfilePage(),
+        ),
+    Routes.searchPage: (context) => BlocProvider(
+          create: (context) => getIt<SearchUsersCubit>(),
+          child: const SearchPage(),
         ),
   };
 }
