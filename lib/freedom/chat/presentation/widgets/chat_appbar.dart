@@ -11,6 +11,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   final UserModel user;
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context).brightness == Brightness.dark;
     return AppBar(
       elevation: 0,
       title: Row(
@@ -66,7 +67,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.6,
                 child: Text(
-                  'marwan',
+                  user.name!,
                   style: TextStyles.font18Bold,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -75,7 +76,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
               Text(
                 '${AppStrings.active} ${timeago.format( user.lastActive!)}',
                 style:
-                    TextStyles.font12NormalGrey.copyWith(color: Colors.white54),
+                    TextStyles.font12NormalGrey.copyWith(color: theme? Colors.white:Colors.black),
               ),
             ],
           ),

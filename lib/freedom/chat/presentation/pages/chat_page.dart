@@ -12,21 +12,26 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   late UserModel user;
+  String senderId = '';
 
   @override
   void didChangeDependencies() {
-    user = ModalRoute.of(context)!.settings.arguments as UserModel;
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    user = args['user'] as UserModel;
+    senderId = args['senderId'] as String? ?? user.uId!;
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  ChatAppBar(
+      appBar: ChatAppBar(
         user: user,
       ),
       body: ChatBody(
         user: user,
+        senderId: senderId,
       ),
     );
   }

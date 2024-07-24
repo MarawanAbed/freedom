@@ -5,10 +5,10 @@ import 'package:freedom_chat_app/freedom/chat/presentation/widgets/build_chat_me
 import 'package:freedom_chat_app/freedom/sign_up/data/models/user_model.dart';
 
 class ChatMessage extends StatefulWidget {
-  const ChatMessage({super.key, required this.user});
+  const ChatMessage({super.key, required this.user, required this.senderId});
 
   final UserModel user;
-
+  final String senderId;
   @override
   State<ChatMessage> createState() => _ChatMessageState();
 }
@@ -18,7 +18,7 @@ class _ChatMessageState extends State<ChatMessage> {
 
   @override
   void initState() {
-    context.read<GetAllMessagesCubit>().getAllMessages(widget.user.uId!);
+    context.read<GetAllMessagesCubit>().getAllMessages(widget.senderId==''?widget.user.uId!:widget.senderId);
     super.initState();
   }
 

@@ -32,7 +32,10 @@ class _UserItemsState extends State<UserItems> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.pushNamed(Routes.chatPage, arguments: widget.user);
+        context.pushNamed(Routes.chatPage,arguments: {
+          'user': widget.user,
+          'senderId': null,
+        });
       },
       child: ListTile(
         leading: CustomProfileImage(

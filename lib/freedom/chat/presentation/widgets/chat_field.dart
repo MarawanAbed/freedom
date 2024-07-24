@@ -86,13 +86,13 @@ class _ChatTextFieldState extends State<ChatTextField> {
     await cubit.addMessageText(
         content: _controller.text,
         receiverId: widget.user.uId!,
+        user: widget.user
     );
     _controller.clear();
   }
 
   Future<void> _sendImage(BuildContext context) async {
     var cubit = context.read<SendMessagesCubit>();
-
-    await cubit.addMessageImage(receiverId: widget.user.uId!);
+    await cubit.addMessageImage(receiverId: widget.user.uId!, user: widget.user);
   }
 }

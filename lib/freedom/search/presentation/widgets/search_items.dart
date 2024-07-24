@@ -19,7 +19,10 @@ class SearchItems extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.pushNamed(Routes.chatPage, arguments: user);
+        context.pushNamed(Routes.chatPage, arguments: {
+          'user': user,
+          'senderId': user.uId,
+        });
       },
       child: ListTile(
         leading: CustomProfileImage(

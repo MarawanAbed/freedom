@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freedom_chat_app/core/di/dependancy_injection.dart';
 import 'package:freedom_chat_app/core/helpers/cache.dart';
 import 'package:freedom_chat_app/core/services/bloc_observer.dart';
+import 'package:freedom_chat_app/core/services/notification_services.dart';
 import 'package:freedom_chat_app/core/utils/strings.dart';
 import 'package:freedom_chat_app/firebase_options.dart';
 import 'package:freedom_chat_app/freedom.dart';
@@ -14,6 +15,8 @@ void main()async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await setupGetIt();
+  await getIt<LocalNotificationServices>().initNotification();
+  getIt<RemoteNotificationService>().firebaseNotification();
   Bloc.observer = MyBlocObserver();
   bool? isOnBoarding = await getIt<SharedPreCacheHelper>().getData(key:AppStrings.onBoardingKey) ?? false;
   runApp( Freedom(

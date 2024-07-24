@@ -263,8 +263,8 @@ void _setupServices() {
             getIt(),
             getIt(),
           ));
-  getIt.registerLazySingleton<LocalNotificationsServices>(
-      () => LocalNotificationsServices(
+  getIt.registerLazySingleton<LocalNotificationServices>(
+      () => LocalNotificationServices(
             notificationsPlugin: getIt(),
           ));
 }

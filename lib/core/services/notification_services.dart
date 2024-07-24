@@ -7,14 +7,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freedom_chat_app/core/di/dependancy_injection.dart';
+import 'package:freedom_chat_app/core/routes/routes.dart';
+import 'package:freedom_chat_app/core/utils/app_secured.dart';
+import 'package:freedom_chat_app/freedom.dart';
+import 'package:freedom_chat_app/freedom/sign_up/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling a background message ${message.notification!.title}');
-  getIt<LocalNotificationsServices>().showNotification(
+  getIt<LocalNotificationServices>().showNotification(
     title: message.notification!.title!,
     body: message.notification!.body!,
+    senderId: message.data['senderId'],
+    user: UserModel.fromJson(jsonDecode(message.data['user'])),
   );
+  String senderId = message.data['senderId'];
+  navigatorKey.currentState?.pushNamed(Routes.chatPage, arguments: senderId);
 }
 
 class RemoteNotificationService {
@@ -36,23 +44,22 @@ class RemoteNotificationService {
       print('Got a message whilst in the foreground');
       print('Message data: ${message.data}');
 
-      // if (message.notification != null) {
-      //   print('Message notification: ${message.notification}');
-      //   final notification = message.notification;
-      //   getIt<LocalNotificationsServices>().showText(
-      //     title: notification!.title!,
-      //     body: notification.body!,
-      //     fln: flutterLocalNotificationsPlugin,
-      //   );
-      // }
+      if (message.notification != null) {
+        print('Message notification: ${message.notification}');
+        final notification = message.notification;
+        getIt<LocalNotificationServices>().showNotification(
+          title: notification!.title!,
+          body: notification.body!,
+          senderId: message.data['senderId'],
+          user: UserModel.fromJson(jsonDecode(message.data['user'])),
+        );
+      }
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
       print('Message clicked!');
-      // final receiverId = message.data['receiverId'];
-      // final userSnapshot = await FirebaseFirestore.instance.collection('users').doc(receiverId).get();
-      // final user = UserModel.fromJson(userSnapshot.data()!);
-      // Navigators.navigationKey.currentState!.push(MaterialPageRoute(builder: (context) => ChatScreen(user: user)));
+      String senderId = message.data['senderId'];
+      navigatorKey.currentState?.pushNamed(Routes.chatPage, arguments: senderId);
     });
   }
 
@@ -102,6 +109,8 @@ class RemoteNotificationService {
     required String senderId,
     required String receiverToken,
     required String title,
+    required UserModel user,
+
   }) async {
     try {
       const String fcmUrl = 'https://fcm.googleapis.com/fcm/send';
@@ -121,6 +130,7 @@ class RemoteNotificationService {
           'click_action': 'FLUTTER_NOTIFICATION_CLICK',
           'status': 'done',
           'senderId': senderId,
+          'user': user.toJson().map((key, value) => MapEntry(key, value is Timestamp ? value.toDate().toIso8601String() : value)),
         },
       };
 
@@ -128,7 +138,7 @@ class RemoteNotificationService {
         Uri.parse(fcmUrl),
         headers: <String, String>{
           'Content-Type': 'application/json',
-          // 'Authorization': 'key=${AppSecured.serverKey}',
+          'Authorization': 'key=${AppSecured.appMessaging}',
         },
         body: jsonEncode(payload),
       );
@@ -148,14 +158,14 @@ class RemoteNotificationService {
   }
 }
 
-class LocalNotificationsServices {
+class LocalNotificationServices {
   final FlutterLocalNotificationsPlugin notificationsPlugin;
 
-  LocalNotificationsServices({required this.notificationsPlugin});
+  LocalNotificationServices({required this.notificationsPlugin});
 
   Future<void> initNotification() async {
     AndroidInitializationSettings initializationSettingsAndroid =
-    const AndroidInitializationSettings('icon');
+    const AndroidInitializationSettings('logo_dark_freedom');
 
     var initializationSettingsIOS = DarwinInitializationSettings(
         requestAlertPermission: true,
@@ -170,24 +180,13 @@ class LocalNotificationsServices {
         onDidReceiveNotificationResponse:
             (NotificationResponse notificationResponse) async {
           if (notificationResponse.payload != null) {
-            // final payloadData = jsonDecode(notificationResponse.payload!);
-            // List<String> keywords = ['is about to end.', 'is about to start.'];
-            // // Filter the title
-            // String filteredTitle = HelperMethods().filterTitle(payloadData['title'], keywords);
-            //
-            // String body = payloadData['body'];
-            // String startTime = payloadData['formattedStartTime'];
-            // String endTime = payloadData['formattedEndTime'];
-            //
-            // navigatorKey.currentState?.push(MaterialPageRoute(
-            //   builder: (context) =>
-            //       NotificationPage(
-            //         title: filteredTitle, // Use the filtered title
-            //         body: body,
-            //         startTime: startTime,
-            //         endTime: endTime,
-            //       ),
-            // ));
+            print('Payload: ${notificationResponse.payload}');
+            String senderId = jsonDecode(notificationResponse.payload!)['senderId'];
+            Map<String, dynamic> user = jsonDecode(notificationResponse.payload!)['user'];
+            navigatorKey.currentState?.pushNamed(Routes.chatPage, arguments: {
+              'senderId': senderId,
+              'user': UserModel.fromJson(user),
+            });
           }
         });
   }
@@ -200,20 +199,13 @@ class LocalNotificationsServices {
   }
 
   Future showNotification(
-      {int id = 0, String? title, String? body, String? payLoad}) async {
+      {int id = 0, String? title, String? body, String? payLoad,String ? senderId,required UserModel user}) async {
+    String payload = jsonEncode({
+      'senderId': senderId,
+      'user': user.toJson().map((key, value) => MapEntry(key, value is Timestamp ? value.toDate().toIso8601String() : value)),
+    });
     return notificationsPlugin.show(
-        id, title, body, await notificationDetails());
+        id, title, body, await notificationDetails(),payload: payload);
   }
-
-  Future<void> cancelNotification(int id) async {
-    print('cancelNotification $id');
-    await notificationsPlugin.cancel(id);
-    print('cancelNotification done $id');
-  }
-
-  Future<void> cancelAllNotifications() async {
-    await notificationsPlugin.cancelAll();
-  }
-
 }
 

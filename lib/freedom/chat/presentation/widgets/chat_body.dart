@@ -4,8 +4,9 @@ import 'package:freedom_chat_app/freedom/chat/presentation/widgets/chat_message.
 import 'package:freedom_chat_app/freedom/sign_up/data/models/user_model.dart';
 
 class ChatBody extends StatelessWidget {
-  const ChatBody({super.key, required this.user});
+  const ChatBody({super.key, required this.user, required this.senderId});
   final UserModel user;
+  final String senderId;
   @override
   Widget build(BuildContext context) {
     return  Column(
@@ -13,6 +14,7 @@ class ChatBody extends StatelessWidget {
         Expanded(
           child: ChatMessage(
             user: user,
+            senderId: senderId,
           ),
         ),
         const Divider(
