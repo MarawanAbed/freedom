@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:freedom_chat_app/core/helpers/extension.dart';
+import 'package:freedom_chat_app/core/routes/routes.dart';
 import 'package:freedom_chat_app/core/themes/styles.dart';
 import 'package:freedom_chat_app/core/utils/sizes.dart';
 import 'package:freedom_chat_app/freedom/sign_up/data/models/user_model.dart';
@@ -17,7 +19,7 @@ class SearchItems extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // context.pushNamed(Routes.chatPage, arguments: user);
+        context.pushNamed(Routes.chatPage, arguments: user);
       },
       child: ListTile(
         leading: CustomProfileImage(

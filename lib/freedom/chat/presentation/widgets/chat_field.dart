@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freedom_chat_app/core/themes/app_colors.dart';
 import 'package:freedom_chat_app/core/utils/sizes.dart';
 import 'package:freedom_chat_app/core/utils/strings.dart';
 import 'package:freedom_chat_app/core/widgets/app_text_form.dart';
-
+import 'package:freedom_chat_app/freedom/chat/presentation/bloc/send_messages_cubit.dart';
+import 'package:freedom_chat_app/freedom/sign_up/data/models/user_model.dart';
 
 import '../../../../core/themes/styles.dart';
 
 class ChatTextField extends StatefulWidget {
-  const ChatTextField({super.key,});
-
-
+  const ChatTextField({
+    super.key, required this.user,
+  });
+  final UserModel user;
   @override
   State<ChatTextField> createState() => _ChatTextFieldState();
 }
@@ -22,7 +25,8 @@ class _ChatTextFieldState extends State<ChatTextField> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context).brightness == Brightness.dark;
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppSizes.kDefaultSymmetricHorizontalPaddingS10),
+      padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.kDefaultSymmetricHorizontalPaddingS10),
       child: Row(
         children: [
           Expanded(
@@ -78,14 +82,17 @@ class _ChatTextFieldState extends State<ChatTextField> {
   }
 
   Future<void> _sendText(BuildContext context) async {
-    // var cubit = SendMessagesCubit.get(context);
-    // await cubit.addMessageText(
-    //     content: _controller.text, receiverId: widget.user.uId!,user: widget.user);
-    // _controller.clear();
+    var cubit = context.read<SendMessagesCubit>();
+    await cubit.addMessageText(
+        content: _controller.text,
+        receiverId: widget.user.uId!,
+    );
+    _controller.clear();
   }
 
   Future<void> _sendImage(BuildContext context) async {
-    // var cubit = SendMessagesCubit.get(context);
-    // await cubit.addMessageImage(receiverId: widget.user.uId!,user: widget.user);
+    var cubit = context.read<SendMessagesCubit>();
+
+    await cubit.addMessageImage(receiverId: widget.user.uId!);
   }
 }

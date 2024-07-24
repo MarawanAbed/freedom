@@ -7,6 +7,9 @@ import 'package:freedom_chat_app/core/helpers/cache.dart';
 import 'package:freedom_chat_app/core/services/firebase_services.dart';
 import 'package:freedom_chat_app/core/services/notification_services.dart';
 import 'package:freedom_chat_app/core/utils/app_secured.dart';
+import 'package:freedom_chat_app/freedom/chat/data/data_sources/remote_data_source.dart';
+import 'package:freedom_chat_app/freedom/chat/data/repositories/repo_impl.dart';
+import 'package:freedom_chat_app/freedom/chat/domain/repositories/repo.dart';
 import 'package:freedom_chat_app/freedom/chat/domain/use_cases/send_message.dart';
 import 'package:freedom_chat_app/freedom/chat/presentation/bloc/get_all_messages_cubit.dart';
 import 'package:freedom_chat_app/freedom/chat/presentation/bloc/send_messages_cubit.dart';
@@ -82,12 +85,11 @@ Future<void> setupGetIt() async {
 
 void _setupDataSources() {
   // //data sources
-  // getIt.registerLazySingleton<ChatRemoteDataSource>(
-  //         () => ChatRemoteDataSourceImpl(
-  //       databaseService: getIt(),
-  //       storeService: getIt(),
-  //       authService: getIt(),
-  //     ));
+  getIt.registerLazySingleton<ChatRemoteDataSource>(
+          () => ChatRemoteDataSourceImpl(
+        databaseService: getIt(),
+        storageService: getIt(),
+      ));
   getIt.registerLazySingleton<SignInRemoteDataSource>(
       () => SignInRemoteDataSourceImpl(authService: getIt()));
   getIt.registerLazySingleton<ForgetPasswordRemoteDataSource>(
@@ -132,6 +134,9 @@ void _setupRepositories() {
       () => ProfileRepoImpl(profileDataSource: getIt()));
   getIt.registerLazySingleton<EditProfileRepo>(
           () => EditProfileRepositoryImpl(dataSource: getIt()));
+
+  getIt.registerLazySingleton<ChatRepo>(
+          () => ChatRepoImpl(dataSource: getIt()));
 }
 
 void _setupUseCases() {
@@ -157,7 +162,9 @@ void _setupUseCases() {
       () => SearchUsersUseCase(repo: getIt()));
   getIt.registerLazySingleton<UpdateProfileUseCase>(
       () => UpdateProfileUseCase(repo: getIt()));
-  getIt.registerLazySingleton<SendMessageUseCase>(() => SendMessageUseCase());
+  getIt.registerLazySingleton<SendMessageUseCase>(() => SendMessageUseCase(
+    chatRepo: getIt(),
+  ));
 }
 
 void _setupCubits() {
@@ -171,10 +178,15 @@ void _setupCubits() {
   );
 
   getIt.registerFactory<SendMessagesCubit>(
-    () => SendMessagesCubit(),
+    () => SendMessagesCubit(
+      getIt(),
+      getIt(),
+    ),
   );
   getIt.registerFactory<GetAllMessagesCubit>(
-    () => GetAllMessagesCubit(),
+    () => GetAllMessagesCubit(
+      getIt(),
+    ),
   );
   getIt.registerFactory<ForgetPasswordCubit>(
     () => ForgetPasswordCubit(

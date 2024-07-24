@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freedom_chat_app/core/di/dependancy_injection.dart';
 import 'package:freedom_chat_app/core/routes/routes.dart';
 import 'package:freedom_chat_app/freedom/auth/presentation/pages/auth_page.dart';
+import 'package:freedom_chat_app/freedom/chat/presentation/bloc/get_all_messages_cubit.dart';
+import 'package:freedom_chat_app/freedom/chat/presentation/bloc/send_messages_cubit.dart';
 import 'package:freedom_chat_app/freedom/chat/presentation/pages/chat_page.dart';
 import 'package:freedom_chat_app/freedom/edit_profile/presentation/bloc/update_profile_cubit.dart';
 import 'package:freedom_chat_app/freedom/edit_profile/presentation/pages/edit_profile_page.dart';
@@ -46,7 +48,17 @@ class AppRoutes {
           ],
           child: const HomeLayout(),
         ),
-    Routes.chatPage: (context) => const ChatPage(),
+    Routes.chatPage: (context) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => getIt<SendMessagesCubit>(),
+            ),
+            BlocProvider(
+              create: (context) => getIt<GetAllMessagesCubit>(),
+            ),
+          ],
+          child: const ChatPage(),
+        ),
     Routes.editProfilePage: (context) => BlocProvider(
           create: (context) => getIt<UpdateProfileCubit>(),
           child: const EditProfilePage(),

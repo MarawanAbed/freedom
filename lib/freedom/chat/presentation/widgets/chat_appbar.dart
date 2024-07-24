@@ -3,12 +3,12 @@ import 'package:freedom_chat_app/core/helpers/helper_methods.dart';
 import 'package:freedom_chat_app/core/themes/styles.dart';
 import 'package:freedom_chat_app/core/utils/sizes.dart';
 import 'package:freedom_chat_app/core/utils/strings.dart';
+import 'package:freedom_chat_app/freedom/sign_up/data/models/user_model.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const ChatAppBar({super.key, });
-
-
+  const ChatAppBar({super.key, required this.user, });
+  final UserModel user;
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -18,12 +18,12 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
           Stack(
             children: [
               CircleAvatar(
-                radius: AppSizes.circleAvatarRadius,
-                backgroundImage: const NetworkImage(
-                  'https://picsum.photos/200',
+                radius: 25,
+                backgroundImage:  NetworkImage(
+                  user.image!,
                 ),
               ),
-              if (true)
+              if (user.isOnline!)
                 Positioned(
                   right: 0,
                   bottom: 0,
@@ -73,7 +73,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
               Text(
-                '${AppStrings.active} ${timeago.format(DateTime.now())}',
+                '${AppStrings.active} ${timeago.format( user.lastActive!)}',
                 style:
                     TextStyles.font12NormalGrey.copyWith(color: Colors.white54),
               ),

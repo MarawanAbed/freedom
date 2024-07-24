@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
+import 'package:freedom_chat_app/freedom/chat/data/models/messages.dart';
 import 'package:freedom_chat_app/freedom/sign_up/data/models/user_model.dart';
 import 'package:github_sign_in/github_sign_in.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -113,7 +114,7 @@ class AuthService {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
         // Handle cancellation here
-        throw('Google sign-in was cancelled by the user');
+        throw ('Google sign-in was cancelled by the user');
       }
 
       // Force account selection
@@ -274,13 +275,11 @@ class AuthService {
     await auth.currentUser!.sendEmailVerification();
   }
 
-
   Future<void> reloadUser() async {
     await auth.currentUser!.reload();
   }
 
-  bool emailVerified()
-  {
+  bool emailVerified() {
     return auth.currentUser!.emailVerified;
   }
 
@@ -310,6 +309,7 @@ class AuthService {
       print('Error: $e');
     }
   }
+
   Future<void> updateEmailOnly({
     required String newEmail,
     required String password,
@@ -371,20 +371,21 @@ class DatabaseService {
   }
 
 //
-Stream<List<UserModel>> getAllUsers() {
-  final userCollection = fireStore
-      .collection('users')
-      .orderBy('lastActive', descending: true)
-      .snapshots(includeMetadataChanges: true);
-  return userCollection.map((querySnapshot) {
-    if (querySnapshot.docs.isEmpty) {
-      return [];
-    }
-    return querySnapshot.docs
-        .map((e) => UserModel.fromJson(e.data()))
-        .toList();
-  });
-}
+  Stream<List<UserModel>> getAllUsers() {
+    final userCollection = fireStore
+        .collection('users')
+        .orderBy('lastActive', descending: true)
+        .snapshots(includeMetadataChanges: true);
+    return userCollection.map((querySnapshot) {
+      if (querySnapshot.docs.isEmpty) {
+        return [];
+      }
+      return querySnapshot.docs
+          .map((e) => UserModel.fromJson(e.data()))
+          .toList();
+    });
+  }
+
 //
   Future<void> updateUser(Map<String, dynamic> data) async {
     try {
@@ -422,6 +423,78 @@ Stream<List<UserModel>> getAllUsers() {
     return userCollection.map((querySnapshot) {
       return querySnapshot.docs
           .map((e) => UserModel.fromJson(e.data()))
+          .toList();
+    });
+  }
+
+  Future<void> addMessage(
+      {required MessagesModel messageEntity,
+      required MessageType messageType}) async {
+    final uId = getIt<AuthService>().getCurrentUserId();
+    final message = MessagesModel(
+      senderId: uId!,
+      receiverId: messageEntity.receiverId,
+      content: messageEntity.content,
+      sendTime: DateTime.now(),
+      messageType: messageType,
+    ).toMap();
+    if (uId == messageEntity.receiverId) {
+      //that me i send message to my self
+      await fireStore
+          .collection('users')
+          .doc(uId)
+          .collection('chats')
+          .doc(messageEntity.receiverId)
+          .collection('messages')
+          .add(message);
+    } else {
+      //that me i send message to other user
+      await fireStore
+          .collection('users')
+          .doc(uId)
+          .collection('chats')
+          .doc(messageEntity.receiverId)
+          .collection('messages')
+          .add(message);
+      //that other user i send message to me
+      await fireStore
+          .collection('users')
+          .doc(messageEntity.receiverId)
+          .collection('chats')
+          .doc(uId)
+          .collection('messages')
+          .add(message);
+    }
+  }
+
+  // Future<void> addTextMessage({required MessagesModel messageEntity}) async {
+  //   await _addMessage(
+  //       messageEntity: messageEntity, messageType: MessageType.text);
+  // }
+  // Future<void> addImageMessage({required MessagesModel messageEntity})
+  // async {
+  //   await _addMessage(
+  //       messageEntity: messageEntity, messageType: MessageType.image);
+  // }
+
+  Stream<List<MessagesModel>> getAllMessage({required String receiverId}) {
+    print('receiverId: $receiverId');
+    final uId = getIt<AuthService>().getCurrentUserId();
+    final messageCollection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .orderBy('sendTime', descending: false)
+        .snapshots(includeMetadataChanges: true);
+
+    return messageCollection.map((querySnapshot) {
+      if (querySnapshot.docs.isEmpty) {
+        return []; // Return an empty list if there are no messages
+      }
+      return querySnapshot.docs
+          .map((e) => MessagesModel.fromJson(e.data()))
           .toList();
     });
   }

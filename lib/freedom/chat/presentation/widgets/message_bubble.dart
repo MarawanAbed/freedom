@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:freedom_chat_app/core/helpers/helper_methods.dart';
 import 'package:freedom_chat_app/core/themes/styles.dart';
 import 'package:freedom_chat_app/core/utils/sizes.dart';
+import 'package:freedom_chat_app/freedom/chat/data/models/messages.dart';
+import 'package:freedom_chat_app/freedom/sign_up/data/models/user_model.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class MessageBubble extends StatelessWidget {
   const MessageBubble({
     super.key,
     required this.isMe,
+    required this.user,
+    required this.messageModel,
   });
 
-  // final MessageModel messageModel;
-  // final UserModel user;
+  final MessagesModel messageModel;
+  final UserModel user;
   final bool isMe;
 
   @override
@@ -46,32 +52,31 @@ class MessageBubble extends StatelessWidget {
             crossAxisAlignment:
                 isMe ? CrossAxisAlignment.start : CrossAxisAlignment.end,
             children: [
-              Text('empty', style: TextStyles.font16NormalGrey),
-              // if (messageModel.messageType == MessageType.image)
-              //   Container(
-              //     height: AppSizes.imageHeight,
-              //     width: AppSizes.imageWidth,
-              //     decoration: BoxDecoration(
-              //       borderRadius:
-              //           BorderRadius.circular(AppSizes.kDefaultBorderRadiusS15),
-              //       image: DecorationImage(
-              //         image: NetworkImage(messageModel.content!),
-              //         fit: BoxFit.cover,
-              //       ),
-              //     ),
-              //   )
-              // else
-              //   Text(
-              //     messageModel.content!,
-              //     style:
-              //         TextStyles.font16NormalGrey.copyWith(color: Colors.white),
-              //   ),
-              // HelperMethod.verticalSpace(AppSizes.verticalSpacingS5),
-              // Text(
-              //   timeago.format(messageModel.sendTime!),
-              //   style:
-              //       TextStyles.font12NormalGrey.copyWith(color: Colors.white),
-              // ),
+              if (messageModel.messageType == MessageType.image)
+                Container(
+                  height: AppSizes.imageHeight,
+                  width: AppSizes.imageWidth,
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.circular(AppSizes.kDefaultBorderRadiusS15),
+                    image: DecorationImage(
+                      image: NetworkImage(messageModel.content!),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                )
+              else
+                Text(
+                  messageModel.content!,
+                  style:
+                      TextStyles.font16NormalGrey.copyWith(color: Colors.white),
+                ),
+              HelperMethod.verticalSpace(AppSizes.verticalSpacingS5),
+              Text(
+                timeago.format(messageModel.sendTime!),
+                style:
+                    TextStyles.font12NormalGrey.copyWith(color: Colors.white),
+              ),
             ],
           ),
         ),
