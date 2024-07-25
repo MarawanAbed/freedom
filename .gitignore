@@ -12,7 +12,6 @@ migrate_working_dir/
 lib/core/utils/app_secured.dart
 .env
 
-
 # IntelliJ related
 *.iml
 *.ipr

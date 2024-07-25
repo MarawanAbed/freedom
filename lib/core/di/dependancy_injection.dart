@@ -1,68 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:freedom_chat_app/core/helpers/cache.dart';
-import 'package:freedom_chat_app/core/services/firebase_services.dart';
-import 'package:freedom_chat_app/core/services/notification_services.dart';
-import 'package:freedom_chat_app/core/utils/app_secured.dart';
-import 'package:freedom_chat_app/freedom/chat/data/data_sources/remote_data_source.dart';
-import 'package:freedom_chat_app/freedom/chat/data/repositories/repo_impl.dart';
-import 'package:freedom_chat_app/freedom/chat/domain/repositories/repo.dart';
-import 'package:freedom_chat_app/freedom/chat/domain/use_cases/send_message.dart';
-import 'package:freedom_chat_app/freedom/chat/presentation/bloc/get_all_messages_cubit.dart';
+import 'package:freedom_chat_app/lib_imports.dart';
 import 'package:freedom_chat_app/freedom/chat/presentation/bloc/send_messages_cubit.dart';
-import 'package:freedom_chat_app/freedom/edit_profile/data/data_sources/remote_data_source.dart';
-import 'package:freedom_chat_app/freedom/edit_profile/data/repositories/repo_impl.dart';
-import 'package:freedom_chat_app/freedom/edit_profile/domain/repositories/repo.dart';
-import 'package:freedom_chat_app/freedom/edit_profile/domain/use_cases/update_profile.dart';
 import 'package:freedom_chat_app/freedom/edit_profile/presentation/bloc/update_profile_cubit.dart';
-import 'package:freedom_chat_app/freedom/forget_password/data/data_sources/remote_data_Source.dart';
-import 'package:freedom_chat_app/freedom/forget_password/data/repositories/repo_impl.dart';
-import 'package:freedom_chat_app/freedom/forget_password/domain/repositories/repo.dart';
-import 'package:freedom_chat_app/freedom/forget_password/domain/use_cases/forget_password.dart';
 import 'package:freedom_chat_app/freedom/forget_password/presentation/bloc/forget_password_cubit.dart';
-import 'package:freedom_chat_app/freedom/home/data/data_sources/remote_data_source.dart';
-import 'package:freedom_chat_app/freedom/home/data/repositories/repo_impl.dart';
-import 'package:freedom_chat_app/freedom/home/domain/repositories/repo.dart';
-import 'package:freedom_chat_app/freedom/home/domain/use_case/update_user.dart';
 import 'package:freedom_chat_app/freedom/home/presentation/bloc/home_cubit.dart';
-import 'package:freedom_chat_app/freedom/home_layout/data/data_source/remote_data_source.dart';
-import 'package:freedom_chat_app/freedom/home_layout/data/repo/repo_impl.dart';
-import 'package:freedom_chat_app/freedom/home_layout/domain/repo/repo.dart';
-import 'package:freedom_chat_app/freedom/profile/data/data_sources/remote_data_source.dart';
-import 'package:freedom_chat_app/freedom/profile/data/repositories/repo_impl.dart';
-import 'package:freedom_chat_app/freedom/profile/domain/repositories/repo.dart';
 import 'package:freedom_chat_app/freedom/profile/presentation/bloc/get_user_cubit.dart';
-import 'package:freedom_chat_app/freedom/search/data/data_sources/remote_data_source.dart';
-import 'package:freedom_chat_app/freedom/search/data/repositories/repo_impl.dart';
-import 'package:freedom_chat_app/freedom/search/domain/repositories/repo.dart';
-import 'package:freedom_chat_app/freedom/search/domain/use_cases/search_users.dart';
 import 'package:freedom_chat_app/freedom/search/presentation/bloc/search_users_cubit.dart';
-import 'package:freedom_chat_app/freedom/sign_in/data/data_sources/remote_data_source.dart';
-import 'package:freedom_chat_app/freedom/sign_in/data/repositories/repo_impl.dart';
-import 'package:freedom_chat_app/freedom/sign_in/domain/repositories/repo.dart';
-import 'package:freedom_chat_app/freedom/sign_in/domain/use_cases/sign_in_with_email_and_password.dart';
-import 'package:freedom_chat_app/freedom/sign_in/domain/use_cases/sign_in_with_github.dart';
-import 'package:freedom_chat_app/freedom/sign_in/domain/use_cases/sign_in_with_google.dart';
-import 'package:freedom_chat_app/freedom/sign_in/domain/use_cases/sign_in_with_twitter.dart';
 import 'package:freedom_chat_app/freedom/sign_in/presentation/bloc/sign_in_cubit.dart';
-import 'package:freedom_chat_app/freedom/sign_up/data/data_sources/remote_data_source.dart';
-import 'package:freedom_chat_app/freedom/sign_up/data/repositories/repo_impl.dart';
-import 'package:freedom_chat_app/freedom/sign_up/domain/repositories/repo.dart';
-import 'package:freedom_chat_app/freedom/sign_up/domain/use_cases/sign_up.dart';
 import 'package:freedom_chat_app/freedom/sign_up/presentation/bloc/sign_up_cubit.dart';
-import 'package:freedom_chat_app/freedom/verify_email/data/data_sources/remote_data_source.dart';
-import 'package:freedom_chat_app/freedom/verify_email/data/repositories/repo_impl.dart';
-import 'package:freedom_chat_app/freedom/verify_email/domain/repositories/repo.dart';
-import 'package:freedom_chat_app/freedom/verify_email/domain/use_cases/send_email_verification.dart';
-import 'package:freedom_chat_app/freedom/verify_email/domain/use_cases/sign_out.dart';
-import 'package:get_it/get_it.dart';
-import 'package:github_sign_in/github_sign_in.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:twitter_login/twitter_login.dart';
 
 final getIt = GetIt.instance;
 
@@ -193,14 +137,6 @@ void _setupCubits() {
       getIt(),
     ),
   );
-  // getIt.registerFactory<UpdateUserCubit>(
-  //   () => UpdateUserCubit(
-  //     getIt(),
-  //     getIt(),
-  //     getIt(),
-  //     getIt(),
-  //   ),
-  // );
   getIt.registerFactory<HomeCubit>(
     () => HomeCubit(
       getIt(),
@@ -226,21 +162,6 @@ void _setupCubits() {
       getIt(),
     ),
   );
-  //
-  // getIt.registerFactory<VerifyEmailCubit>(
-  //   () => VerifyEmailCubit(
-  //     checkVerifyEmail: getIt(),
-  //     verifyEmail: getIt(),
-  //     resendVerifyEmail: getIt(),
-  //     logOut: getIt(),
-  //   ),
-  // );
-  //
-  // getIt.registerFactory<SearchUsersCubit>(
-  //   () => SearchUsersCubit(
-  //     getIt(),
-  //   ),
-  // );
 }
 
 void _setupServices() {
