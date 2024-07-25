@@ -12,6 +12,7 @@ The app features user authentication, Firestore database integration, and push n
 - **User Status**: Track user online status and last active time.
 - **Profile Management**: Update user profiles with custom images and information.
 - **Search Functionality**: Search for other users within the app.
+- **Theme System**: Switch between light and dark themes for a personalized user experience.
 
 ## Technologies Used
 
