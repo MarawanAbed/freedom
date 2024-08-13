@@ -14,16 +14,9 @@ The app features user authentication, Firestore database integration, and push n
 - **Search Functionality**: Search for other users within the app.
 - **Theme System**: Switch between light and dark themes for a personalized user experience.
 
-## Technologies Used
-
-- **Flutter**: For building the cross-platform mobile application.
-- **Firebase**: For backend services including Authentication, Firestore, and Cloud Messaging.
-- **Bloc**: For state management.
-- **Dart**: The programming language used for Flutter development.
-
 ## Download the App
 
-Freedom App is available for download [here](https://drive.google.com/file/d/18gp7558wYK2_yTkjyRegwnEZLRMEXSuc/view?usp=sharing).
+Freedom App is available for download [here](https://drive.google.com/file/d/14roXab2LESc6jF3aReIJaAeKLQdC5dQA/view?usp=sharing).
 
 ## Screenshots
 ![Screenshot_1721849159](https://github.com/user-attachments/assets/f3db1e80-fb5d-4ca9-a18d-52af0a41b634)
