@@ -22,6 +22,7 @@ Freedom App is available for download [here](https://drive.google.com/file/d/14r
 ![Screenshot_1721849159](https://github.com/user-attachments/assets/f3db1e80-fb5d-4ca9-a18d-52af0a41b634)
 ![Screenshot_1721849165](https://github.com/user-attachments/assets/787824ae-e80b-4226-b94f-b9eb9e758ccc)
 ![Screenshot_1721849170](https://github.com/user-attachments/assets/a50cfa94-9206-43f9-ba51-b195c14414f2)
+![WhatsApp Image 2024-08-13 at 14 07 40_0b75e47a](https://github.com/user-attachments/assets/8d6f6e39-9047-4721-902d-e6ce33ca690b)
 ![Screenshot_1721849182](https://github.com/user-attachments/assets/87d82310-5cdf-4ac2-9f12-73fc6d6de677)
 ![Screenshot_1721849243](https://github.com/user-attachments/assets/9fda6316-511a-46f2-8adb-3d0ea6affbc9)
 ![Screenshot_1721849289](https://github.com/user-attachments/assets/c2b0926e-06d2-4348-a297-64fe63e87270)
