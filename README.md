@@ -23,7 +23,7 @@ The app features user authentication, Firestore database integration, and push n
 
 ## Download the App
 
-Freedom App is available for download [here](https://drive.google.com/file/d/1ccDYFHGh9SR2v16T8SarXBr3gvT9lVdN/view?usp=sharing).
+Freedom App is available for download [here](https://drive.google.com/file/d/18gp7558wYK2_yTkjyRegwnEZLRMEXSuc/view?usp=sharing).
 
 ## Screenshots
 ![Screenshot_1721849159](https://github.com/user-attachments/assets/f3db1e80-fb5d-4ca9-a18d-52af0a41b634)
