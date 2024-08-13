@@ -39,12 +39,10 @@ class _EmailTextFieldAndButtonState extends State<EmailTextFieldAndButton> {
         AppTextFormField(
           controller: emailController,
           hintText: AppStrings.email,
-          inputTextStyle: TextStyles.font14NormalGrey.copyWith(
-              color: theme ? Colors.white : Colors.black),
+          inputTextStyle: _inputColor(theme),
           backgroundColor: theme ? AppColors.kField2 : Colors.white,
-          hintStyle: theme
-              ? TextStyles.font14NormalGrey.copyWith(color: Colors.black)
-              : TextStyles.font14NormalGrey.copyWith(color: Colors.black),
+          hintStyle: _hintStyle(theme),
+
         ),
         HelperMethod.verticalSpace(AppSizes.verticalSpacingS40),
         CustomElevatedButton(
@@ -55,5 +53,17 @@ class _EmailTextFieldAndButtonState extends State<EmailTextFieldAndButton> {
         ),
       ],
     );
+  }
+
+  TextStyle _hintStyle(bool theme) {
+    return theme
+        ? TextStyles.font14NormalGrey.copyWith(color: Colors.white)
+        : TextStyles.font14NormalGrey;
+  }
+
+  TextStyle _inputColor(bool theme) {
+    return theme
+        ? TextStyles.font14NormalGrey.copyWith(color: Colors.white)
+        : TextStyles.font14NormalGrey.copyWith(color: Colors.black);
   }
 }
