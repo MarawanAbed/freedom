@@ -1,28 +1,36 @@
-
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freedom_chat_app/core/di/dependancy_injection.dart';
 import 'package:freedom_chat_app/core/routes/routes.dart';
-import 'package:freedom_chat_app/core/utils/app_secured.dart';
 import 'package:freedom_chat_app/freedom.dart';
 import 'package:freedom_chat_app/freedom/sign_up/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
+import '../utils/app_secured.dart';
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Handling a background message ${message.notification!.title}');
+  print('Handling a background message ${message.notification?.title}');
+
+  // Make sure 'user' field is properly handled
+  final userJson = jsonDecode(message.data['user']) as Map<String, dynamic>;
+  final user = UserModel.fromJson(userJson);
+
   getIt<LocalNotificationServices>().showNotification(
-    title: message.notification!.title!,
-    body: message.notification!.body!,
+    title: message.notification?.title,
+    body: message.notification?.body,
     senderId: message.data['senderId'],
-    user: UserModel.fromJson(jsonDecode(message.data['user'])),
+    user: user,
   );
-  String senderId = message.data['senderId'];
-  navigatorKey.currentState?.pushNamed(Routes.chatPage, arguments: senderId);
+
+  navigatorKey.currentState?.pushNamed(Routes.chatPage, arguments: {
+    'senderId': message.data['senderId'],
+    'user': user,
+  });
 }
 
 class RemoteNotificationService {
@@ -59,7 +67,8 @@ class RemoteNotificationService {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
       print('Message clicked!');
       String senderId = message.data['senderId'];
-      navigatorKey.currentState?.pushNamed(Routes.chatPage, arguments: senderId);
+      navigatorKey.currentState
+          ?.pushNamed(Routes.chatPage, arguments: senderId);
     });
   }
 
@@ -100,7 +109,7 @@ class RemoteNotificationService {
 
   Future<String> getReceiverToken(String receiverId) async {
     final getToken =
-    await firebaseFireStore.collection('users').doc(receiverId).get();
+        await firebaseFireStore.collection('users').doc(receiverId).get();
     return await getToken.data()!['token'];
   }
 
@@ -110,47 +119,50 @@ class RemoteNotificationService {
     required String receiverToken,
     required String title,
     required UserModel user,
-
   }) async {
     try {
-      const String fcmUrl = 'https://fcm.googleapis.com/fcm/send';
-
-      print('Receiver Token: $receiverToken');
+      const String fcmUrl = 'https://fcm.googleapis.com/v1/projects/notes-firebase-f2d88/messages:send';
 
       final Map<String, dynamic> payload = {
-        'to': receiverToken,
-        'priority': 'high',
-        "notification": {
-          "title": title,
-          "body": body,
-          "mutable_content": true,
-          "sound": "Tri-tone"
-        },
-        'data': {
-          'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-          'status': 'done',
-          'senderId': senderId,
-          'user': user.toJson().map((key, value) => MapEntry(key, value is Timestamp ? value.toDate().toIso8601String() : value)),
-        },
+        'message': {
+          'token': receiverToken,
+          'notification': {
+            'title': title,
+            'body': body,
+          },
+          'android': {
+            'notification': {
+              'sound': 'default', // Use 'default' as 'Tri-tone' is not supported
+            }
+          },
+          'data': {
+            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+            'status': 'done',
+            'senderId': senderId,
+            'user': jsonEncode(user.toJson().map((key, value) => MapEntry(
+                key,
+                value is Timestamp ? value.toDate().toIso8601String() : value
+            ))),
+          },
+        }
       };
 
       final http.Response response = await http.post(
         Uri.parse(fcmUrl),
         headers: <String, String>{
           'Content-Type': 'application/json',
-          'Authorization': 'key=${AppSecured.appMessaging}',
+          'Authorization': AppSecured.bearTokenMessaging, // Ensure correct token format
         },
         body: jsonEncode(payload),
       );
 
-      // Debug log to check the HTTP response status code
       print('FCM Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
         print('Notification sent successfully!');
       } else {
-        print(
-            'Failed to send notification. Status code: ${response.statusCode}');
+        print('Failed to send notification. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error sending notification: $e');
@@ -175,17 +187,21 @@ class LocalNotificationServices {
             (int id, String? title, String? body, String? payload) async {});
 
     var initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
     await notificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse:
             (NotificationResponse notificationResponse) async {
           if (notificationResponse.payload != null) {
             print('Payload: ${notificationResponse.payload}');
-            String senderId = jsonDecode(notificationResponse.payload!)['senderId'];
-            Map<String, dynamic> user = jsonDecode(notificationResponse.payload!)['user'];
+            final Map<String, dynamic> payload = jsonDecode(notificationResponse.payload!) as Map<String, dynamic>;
+            String senderId = payload['senderId'];
+            UserModel user = UserModel.fromJson(payload['user']);
+
             navigatorKey.currentState?.pushNamed(Routes.chatPage, arguments: {
               'senderId': senderId,
-              'user': UserModel.fromJson(user),
+              'user': user,
             });
           }
         });
@@ -199,13 +215,18 @@ class LocalNotificationServices {
   }
 
   Future showNotification(
-      {int id = 0, String? title, String? body, String? payLoad,String ? senderId,required UserModel user}) async {
+      {int id = 0,
+      String? title,
+      String? body,
+      String? payLoad,
+      String? senderId,
+      required UserModel user}) async {
     String payload = jsonEncode({
       'senderId': senderId,
-      'user': user.toJson().map((key, value) => MapEntry(key, value is Timestamp ? value.toDate().toIso8601String() : value)),
+      'user': user.toJson().map((key, value) => MapEntry(
+          key, value is Timestamp ? value.toDate().toIso8601String() : value)),
     });
-    return notificationsPlugin.show(
-        id, title, body, await notificationDetails(),payload: payload);
+    return notificationsPlugin
+        .show(id, title, body, await notificationDetails(), payload: payload);
   }
 }
-

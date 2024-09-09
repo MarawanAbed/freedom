@@ -15,7 +15,6 @@ void main()async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await dotenv.load(fileName: ".env");
   await setupGetIt();
   await getIt<LocalNotificationServices>().initNotification();
   getIt<RemoteNotificationService>().firebaseNotification();

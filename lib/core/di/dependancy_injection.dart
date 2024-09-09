@@ -195,7 +195,7 @@ void _setupExternal() {
   final googleSignIn = GoogleSignIn();
   final GitHubSignIn gitHubSignIn = GitHubSignIn(
     clientId: AppSecured.gitHubClientId,
-    clientSecret: AppSecured.gitHubClientSecret,
+    clientSecret: AppSecured.githubClientSecret,
     redirectUrl: 'https://notes-firebase-f2d88.firebaseapp.com/__/auth/handler',
   );
   final twitterLogin = TwitterLogin(
